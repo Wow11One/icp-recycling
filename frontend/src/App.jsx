@@ -7,6 +7,12 @@ import TransferFrom from './TokenTransfer';
 import TokenInfo from './TokenInfo';
 import TokenSender from './TokenSender';
 import CreateToken from './CreateToken';
+import { ApplicationRoutes } from './utils/constants';
+import HomePage from './pages/HomePage';
+import RecyclingFormPage from './pages/RecyclingFormPage';
+import { BrowserRouter, Navigate, Route, Routes, Outlet } from 'react-router-dom';
+import BonusShopPage from './pages/BonusShopPage';
+import MyNFTsPage from './pages/MyNFTsPage';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,35 +55,51 @@ const App = () => {
   }, [actor]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header
-        actor={actor}
-        setActor={setActor}
-        isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
-        tokenCreated={tokenCreated}
-        setTokenCreated={setTokenCreated}
-      />
-      {tokenCreated ? (
-        <div>
-          <TokenInfo totalSupply={totalSupply} />
-          <div className="mx-auto">
+    <BrowserRouter>
+      <Routes>
+        <Route index path={ApplicationRoutes.HomePage} element={<HomePage />} />
+        <Route path={ApplicationRoutes.RecyclingForm} element={<RecyclingFormPage />} />
+        <Route path={ApplicationRoutes.BonusShopPage} element={<BonusShopPage />} />
+        <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
+        
+        {/* <div className='min-h-screen bg-gray-100'>
+        <Header
+          actor={actor}
+          setActor={setActor}
+          isAuthenticated={isAuthenticated}
+          setIsAuthenticated={setIsAuthenticated}
+          tokenCreated={tokenCreated}
+          setTokenCreated={setTokenCreated}
+        />
+        {tokenCreated ? (
+          <div>
+            <TokenInfo totalSupply={totalSupply} />
+            <div className='mx-auto'>
+              {isAuthenticated ? (
+                <div className='grid grid-cols-1 gap-8 px-4 md:grid-cols-4 lg:grid-cols-3'>
+                  <BalanceChecker decimals={decimals} />
+                  <TokenSender actor={actor} updateSupply={updateSupply} decimals={decimals} />
+                  <ApproveSpender actor={actor} decimals={decimals} />
+                  <TransferFrom actor={actor} decimals={decimals} />
+                </div>
+              ) : (
+                <AuthWarning />
+              )}
+            </div>
+          </div>
+        ) : (
+          <div>
             {isAuthenticated ? (
-              <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-4 lg:grid-cols-3">
-                <BalanceChecker decimals={decimals} />
-                <TokenSender actor={actor} updateSupply={updateSupply} decimals={decimals} />
-                <ApproveSpender actor={actor} decimals={decimals} />
-                <TransferFrom actor={actor} decimals={decimals} />
-              </div>
+              <CreateToken actor={actor} setTokenCreated={setTokenCreated} />
             ) : (
               <AuthWarning />
             )}
           </div>
-        </div>
-      ) : (
-        <div>{isAuthenticated ? <CreateToken actor={actor} setTokenCreated={setTokenCreated} /> : <AuthWarning />}</div>
-      )}
-    </div>
+        )}
+      </div> */}
+
+      </Routes>
+    </BrowserRouter>
   );
 };
 

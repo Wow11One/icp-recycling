@@ -5,7 +5,9 @@ import environment from 'vite-plugin-environment';
 
 export default defineConfig({
   base: './',
-  plugins: [react(), environment('all', { prefix: 'CANISTER_' }), environment('all', { prefix: 'DFX_' })],
+  plugins: [react({
+    include: "**/*.jsx",
+  }), environment('all', { prefix: 'CANISTER_' }), environment('all', { prefix: 'DFX_' })],
   envDir: '../',
   define: {
     'process.env': process.env
@@ -32,6 +34,9 @@ export default defineConfig({
         changeOrigin: true
       }
     },
-    host: '127.0.0.1'
+    host: '127.0.0.1',
+    watch: {
+      usePolling: true,
+    }
   }
 });
