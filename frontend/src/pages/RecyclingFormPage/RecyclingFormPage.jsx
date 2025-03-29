@@ -2,8 +2,10 @@ import { Link } from "react-router-dom"
 import RecyclingForm from "./RecyclingForm"
 import { Recycle } from "lucide-react"
 import React from "react"
+import { Principal } from "@dfinity/candid/lib/cjs/idl"
 
-export default function RecyclingFormPage() {
+export default function RecyclingFormPage({ principal }) {
+  console.log('principal', principal)
   return (
     <div className="min-h-screen bg-green-50">
 
@@ -16,7 +18,7 @@ export default function RecyclingFormPage() {
             and any comments you'd like to share.
           </p>
 
-          <RecyclingForm />
+          <RecyclingForm principal={principal} />
         </div>
       </main>
     </div>

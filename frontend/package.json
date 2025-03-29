@@ -12,6 +12,7 @@
     "@dfinity/auth-client": "2.2.0",
     "@dfinity/candid": "2.2.0",
     "@dfinity/principal": "2.2.0",
+    "browser-image-compression": "^2.0.2",
     "lucide-react": "^0.485.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",

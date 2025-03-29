@@ -14,6 +14,11 @@ const toastNotifications = {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
+            style: {
+                backgroundColor: 'white',
+                color: 'blue',
+                border: '2px solid blue',
+            },
         });
     },
 

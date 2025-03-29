@@ -75,7 +75,7 @@ function ProfilePage({ actor, principal }) {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  console.log('actor', actor)
+  console.log('principal', principal)
 
   return (
     <div className="min-h-screen bg-green-50">
@@ -93,7 +93,7 @@ function ProfilePage({ actor, principal }) {
                   />
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-lg pt-12 font-bold text-green-800">@{principal}</h1>
+                  <h1 className="text-lg pt-12 font-bold text-green-800">@{principal.getPrincipal().toString()}</h1>
                 </div>
                 <div className="flex gap-2 mt-4 md:mt-0">
                   <Link to={ApplicationRoutes.RecyclingForm} className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700">
@@ -222,7 +222,7 @@ function ProfilePage({ actor, principal }) {
                         <div className="flex items-center gap-2 mt-1">
                           <div className="flex items-center gap-1 text-xs text-gray-500">
                             <Clock className="h-3 w-3" />
-                            {formatDate(activity.date)}
+                            Today
                           </div>
                           <div className="flex items-center gap-1 text-xs text-gray-500">
                             <MapPin className="h-3 w-3" />
@@ -241,11 +241,11 @@ function ProfilePage({ actor, principal }) {
                     </div>
                   ))}
                   
-                  <div className="text-center mt-6">
+                  {/* <div className="text-center mt-6">
                     <button className="text-sm font-medium text-green-600 hover:text-green-700">
                       View All Activity
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               )}
               

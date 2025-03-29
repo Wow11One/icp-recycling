@@ -31,7 +31,7 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
     setActor(actor);
     setAuthClient(authClient);
     setIsAuthenticated(isAuthenticated);
-    setPrincipal(identity.getPrincipal().toString());
+    setPrincipal(identity);
   }
 
   const handleConnectIdentity = () => {

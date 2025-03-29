@@ -1,10 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Recycle, MapPin, MessageSquare, Upload, X } from "lucide-react"
 import React from "react";
 import toastNotifications from "../../utils/toastNotifications.utils";
-import { idlFactory, canisterId } from "./declarations/storage";
+import { idlFactory, canisterId, storage as storageCanisterId, createActor } from "declarations/storage";
+import { Actor, HttpAgent } from "@dfinity/agent";
+import { AuthClient } from "@dfinity/auth-client";
+import imageCompression from 'browser-image-compression';
 
-const RecyclingForm = () => {
+const RecyclingForm = ({ principal }) => {
     const [formData, setFormData] = useState({
         location: "",
         comment: "",
@@ -13,6 +16,7 @@ const RecyclingForm = () => {
     const [photoPreview, setPhotoPreview] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitSuccess, setSubmitSuccess] = useState(false)
+    const [actor, setActor] = useState()
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -57,6 +61,7 @@ const RecyclingForm = () => {
                         ...formData,
                         location: `${city}, ${country}`,
                     })
+                    toastNotifications.info('Location fetched successfully!')
                 } else {
                     console.log("Location not found.");
                 }
@@ -84,13 +89,41 @@ const RecyclingForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!actor || !photo) return;
+        if (!photo) return;
+
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+        };
+
 
         try {
-            await actor.store_data(photo, formData.comment, formData.location);
+            setIsSubmitting(true);
+            const compressedFile = await imageCompression(photo, options);
+            const arrayBuffer = await compressedFile.arrayBuffer();
+            const byteArray = new Uint8Array(arrayBuffer);
+            const authClient = await AuthClient.create();
+            const identity = authClient.getIdentity();
+            const actor = createActor(canisterId, {
+                agentOptions: {
+                    identity
+                }
+            });
+
+            await actor.store_data(byteArray, formData.comment, formData.location);
             toastNotifications.success("Recycling data stored successfully!");
+            setPhotoPreview(null);
+            setPhoto(null);
+            setFormData({
+                location: "",
+                comment: "",
+            })
         } catch (error) {
-            console.error("Failed to store data:", error);
+            console.log('error', error)
+            toastNotifications.error("Failed to store data");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -168,14 +201,14 @@ const RecyclingForm = () => {
                                 className="pl-10 w-full rounded-md border border-green-300 py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                                 required
                             />
-                            </div>
-                            <span 
-                                onClick={() => getUserLocation()}
-                                className="text-xs cursor-pointer transition-all duration-300 hover:text-green-500 text-green-400 underline underline-offset-2 mt-3"
-                            >
-                                Determine location automatically.
-                            </span>
                         </div>
+                        <span
+                            onClick={() => getUserLocation()}
+                            className="text-xs cursor-pointer transition-all duration-300 hover:text-green-500 text-green-400 underline underline-offset-2 mt-3"
+                        >
+                            Determine location automatically.
+                        </span>
+                    </div>
 
                     {/* Comment Input */}
                     <div className="space-y-2">

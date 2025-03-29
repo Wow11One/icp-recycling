@@ -1,5 +1,21 @@
 {
   "canisters": {
+    "storage": {
+      "candid": "storage/storage.did",
+      "type": "custom",
+      "shrink": true,
+      "gzip": true,
+      "wasm": "target/wasm32-unknown-unknown/release/storage.wasm",
+      "build": [
+        "cargo build --target wasm32-unknown-unknown --release -p storage",
+        "candid-extractor target/wasm32-unknown-unknown/release/storage.wasm > storage/storage.did"
+      ],
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ]
+    },
     "backend": {
       "candid": "backend/backend.did",
       "type": "custom",
@@ -29,7 +45,7 @@
       "frontend": {}
     },
     "frontend": {
-      "dependencies": ["backend"],
+      "dependencies": ["backend", "storage"],
       "frontend": {
         "entrypoint": "frontend/index.html"
       },

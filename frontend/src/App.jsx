@@ -17,6 +17,7 @@ import LoginPage from './pages/LoginPage';
 import HeaderFooterLayout from './layout/HeaderFooterLayout';
 import ProfilePage from './pages/ProfilePage';
 import AuthLayout from './layout/AuthLayout';
+import { Slide, ToastContainer } from 'react-toastify';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -62,6 +63,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+    <ToastContainer transition={Slide} theme='light' />
       <Routes>
         <Route
           element={
@@ -89,7 +91,7 @@ const App = () => {
               }
             />
           <Route element={<AuthLayout actor={actor} isFetchingAuthentication={isFetchingAuthentication} isAuthenticated={isAuthenticated} />} >
-            <Route path={ApplicationRoutes.RecyclingForm} element={<RecyclingFormPage />} />
+            <Route path={ApplicationRoutes.RecyclingForm} element={<RecyclingFormPage principal={principal} />} />
             <Route path={ApplicationRoutes.BonusShopPage} element={<BonusShopPage />} />
             <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
             <Route path={ApplicationRoutes.Profile} element={<ProfilePage principal={principal} actor={actor} />} />
