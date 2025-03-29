@@ -1,4 +1,4 @@
-# Tokenmania!
+# proof-of-recycling!
 
 ![Tokenmania](https://icp.ninja/examples/_attachments/tokenmania.jpg)
 

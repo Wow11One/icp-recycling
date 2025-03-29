@@ -6,10 +6,10 @@ import { Recycle, ArrowLeft, Leaf, Gift, ShoppingBag, Coffee, Ticket, Award, Ale
 const nftRewards = [
   {
     id: 1,
-    title: "10% Off at Ecomarket for plastic bottle of cola",
-    description: "Get 10% off your next purchase at Ecomarket for plastic bottle of cola. Valid for 30 days after minting.",
+    title: "10% Off for plastic bottle of cola",
+    description: "Get 10% off for plastic bottle of cola. Valid for 30 days after minting.",
     tokenCost: 50,
-    image: "https://omixcdn.com/img/catalog/napitok-coca-cola-0-5l-10665.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0tlnHebMmKomlKym_OVPEvZzwpqXm8BML9Q&s",
     category: "discount"
   },
   {
@@ -17,7 +17,7 @@ const nftRewards = [
     title: "Free Coffee at GreenBean",
     description: "Enjoy a free coffee of your choice at any GreenBean location. No expiration.",
     tokenCost: 75,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0tlnHebMmKomlKym_OVPEvZzwpqXm8BML9Q&s",
     category: "freebie"
   },
   {
@@ -25,7 +25,7 @@ const nftRewards = [
     title: "Eco-Friendly Tote Bag",
     description: "Redeem for a limited edition recycled material tote bag. While supplies last.",
     tokenCost: 100,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0tlnHebMmKomlKym_OVPEvZzwpqXm8BML9Q&s",
     category: "merchandise"
   },
   {
@@ -33,7 +33,7 @@ const nftRewards = [
     title: "Plant a Tree Certificate",
     description: "We'll plant a tree in your name and send you a digital certificate with GPS coordinates.",
     tokenCost: 150,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0tlnHebMmKomlKym_OVPEvZzwpqXm8BML9Q&s",
     category: "impact"
   },
   {
@@ -41,7 +41,7 @@ const nftRewards = [
     title: "25% Off Recycled Products",
     description: "Get 25% off any product made from recycled materials at participating stores.",
     tokenCost: 125,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0tlnHebMmKomlKym_OVPEvZzwpqXm8BML9Q&s",
     category: "discount"
   },
   {
@@ -49,7 +49,7 @@ const nftRewards = [
     title: "Exclusive Recycling Workshop",
     description: "Access to our exclusive online workshop about advanced recycling techniques.",
     tokenCost: 200,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0tlnHebMmKomlKym_OVPEvZzwpqXm8BML9Q&s",
     category: "experience"
   }
 ];
@@ -88,23 +88,6 @@ function BonusShopPage() {
 
   return (
     <div className="min-h-screen bg-green-50">
-      <header className="sticky top-0 z-40 w-full border-b bg-white">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-2">
-            <Recycle className="h-6 w-6 text-green-600" />
-            <span className="text-xl font-bold text-green-600">EcoRecycle</span>
-          </div>
-          
-          <Link 
-            to="/" 
-            className="flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
-
       <main className="container mx-auto py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
@@ -192,7 +175,7 @@ function BonusShopPage() {
           {/* NFT Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredNfts.map((nft) => (
-              <div key={nft.id} className="bg-white rounded-lg overflow-hidden border border-green-200 shadow-sm hover:shadow-md transition-shadow">
+              <div key={nft.id} className="bg-white rounded-lg border border-green-200 shadow-sm hover:shadow-md transition-shadow">
                 <div className="relative">
                   <img 
                     src={nft.image || "/placeholder.svg"} 
@@ -204,7 +187,7 @@ function BonusShopPage() {
                     {nft.category.charAt(0).toUpperCase() + nft.category.slice(1)}
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-4 flex flex-col justify-between">
                   <h3 className="text-lg font-bold text-green-800 mb-2">{nft.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{nft.description}</p>
                   <div className="flex items-center justify-between">
@@ -275,56 +258,6 @@ function BonusShopPage() {
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <footer className="w-full border-t bg-white py-6 mt-12">
-        <div className="container mx-auto px-4">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Recycle className="h-5 w-5 text-green-600" />
-                <span className="text-lg font-bold text-green-600">EcoRecycle</span>
-              </div>
-              <p className="text-sm text-gray-600">
-                Making our planet greener, one recycle at a time.
-              </p>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-green-800">Services</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="#" className="hover:text-green-600">Residential Recycling</Link></li>
-                <li><Link to="#" className="hover:text-green-600">Commercial Services</Link></li>
-                <li><Link to="#" className="hover:text-green-600">E-Waste Recycling</Link></li>
-              </ul>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-green-800">Company</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="#" className="hover:text-green-600">About Us</Link></li>
-                <li><Link to="#" className="hover:text-green-600">Our Impact</Link></li>
-                <li><Link to="#" className="hover:text-green-600">Careers</Link></li>
-              </ul>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-green-800">Contact</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>123 Green Street</li>
-                <li>Eco City, EC 12345</li>
-                <li>info@ecorecycle.com</li>
-                <li>(123) 456-7890</li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 border-t pt-6">
-            <p className="text-center text-xs text-gray-600">
-              © 2025 EcoRecycle. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

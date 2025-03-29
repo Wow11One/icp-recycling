@@ -17,13 +17,14 @@ import {
     Ticket,
     Award,
 } from "lucide-react"
+import React from "react"
 
 const myNfts = [
     {
         id: "nft-001",
         title: "10% Off at EcoStore",
         description: "Get 10% off your next purchase at EcoStore. Valid for 30 days after minting.",
-        image: "/placeholder.svg?height=200&width=200",
+        image: "https://www.office-coffee.co.uk/assets/media/301r-how-to-be-a-sustainable-coffee-drinker-1024x600.webp",
         acquiredDate: "2023-10-15",
         expiryDate: "2023-11-15",
         status: "unused",
@@ -35,7 +36,7 @@ const myNfts = [
         id: "nft-002",
         title: "Free Coffee at GreenBean",
         description: "Enjoy a free coffee of your choice at any GreenBean location. No expiration.",
-        image: "/placeholder.svg?height=200&width=200",
+        image: "https://www.office-coffee.co.uk/assets/media/301r-how-to-be-a-sustainable-coffee-drinker-1024x600.webp",
         acquiredDate: "2023-09-22",
         expiryDate: null,
         status: "used",
@@ -48,7 +49,7 @@ const myNfts = [
         id: "nft-003",
         title: "Eco-Friendly Tote Bag",
         description: "Redeem for a limited edition recycled material tote bag. While supplies last.",
-        image: "/placeholder.svg?height=200&width=200",
+        image: "https://www.office-coffee.co.uk/assets/media/301r-how-to-be-a-sustainable-coffee-drinker-1024x600.webp",
         acquiredDate: "2023-11-01",
         expiryDate: null,
         status: "unused",
@@ -60,7 +61,7 @@ const myNfts = [
         id: "nft-004",
         title: "Plant a Tree Certificate",
         description: "We'll plant a tree in your name and send you a digital certificate with GPS coordinates.",
-        image: "/placeholder.svg?height=200&width=200",
+        image: "https://www.office-coffee.co.uk/assets/media/301r-how-to-be-a-sustainable-coffee-drinker-1024x600.webp",
         acquiredDate: "2023-08-10",
         expiryDate: null,
         status: "used",
@@ -73,7 +74,7 @@ const myNfts = [
         id: "nft-005",
         title: "25% Off Recycled Products",
         description: "Get 25% off any product made from recycled materials at participating stores.",
-        image: "/placeholder.svg?height=200&width=200",
+        image: "https://www.office-coffee.co.uk/assets/media/301r-how-to-be-a-sustainable-coffee-drinker-1024x600.webp",
         acquiredDate: "2023-10-30",
         expiryDate: "2023-12-30",
         status: "unused",
@@ -151,21 +152,6 @@ function MyNftsPage() {
 
     return (
         <div className="min-h-screen bg-green-50">
-            {/* Header */}
-            <header className="sticky top-0 z-40 w-full border-b bg-white">
-                <div className="container mx-auto flex h-16 items-center justify-between px-4 py-4">
-                    <div className="flex items-center gap-2">
-                        <Recycle className="h-6 w-6 text-green-600" />
-                        <span className="text-xl font-bold text-green-600">EcoRecycle</span>
-                    </div>
-
-                    <Link to="/" className="flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700">
-                        <ArrowLeft className="h-4 w-4" />
-                        Back to Home
-                    </Link>
-                </div>
-            </header>
-
             {/* Main Content */}
             <main className="container mx-auto py-12 px-4">
                 <div className="max-w-6xl mx-auto">
@@ -293,7 +279,7 @@ function MyNftsPage() {
                         {!selectedNft && 
                         (<div className="w-full flex justify-center items-center lg:col-span-2 rounded-lg border-2 border-dashed border-green-200 text-green-600 opacity-80">
                             <div className='text-xl font-medium '>
-                                Select token from your collection..
+                                Select token from your collection...
                             </div>
                         </div>
                         )}
@@ -464,78 +450,6 @@ function MyNftsPage() {
                     </div>
                 </div>
             </main>
-
-            {/* Footer */}
-            <footer className="w-full border-t bg-white py-6 mt-12">
-                <div className="container mx-auto px-4">
-                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                                <Recycle className="h-5 w-5 text-green-600" />
-                                <span className="text-lg font-bold text-green-600">EcoRecycle</span>
-                            </div>
-                            <p className="text-sm text-gray-600">Making our planet greener, one recycle at a time.</p>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-sm font-medium text-green-800">Services</h3>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>
-                                    <Link to="#" className="hover:text-green-600">
-                                        Residential Recycling
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="#" className="hover:text-green-600">
-                                        Commercial Services
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="#" className="hover:text-green-600">
-                                        E-Waste Recycling
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-sm font-medium text-green-800">Company</h3>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>
-                                    <Link to="#" className="hover:text-green-600">
-                                        About Us
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="#" className="hover:text-green-600">
-                                        Our Impact
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="#" className="hover:text-green-600">
-                                        Careers
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-sm font-medium text-green-800">Contact</h3>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>123 Green Street</li>
-                                <li>Eco City, EC 12345</li>
-                                <li>info@ecorecycle.com</li>
-                                <li>(123) 456-7890</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="mt-8 border-t pt-6">
-                        <p className="text-center text-xs text-gray-600">
-                            © {new Date().getFullYear()} EcoRecycle. All rights reserved.
-                        </p>
-                    </div>
-                </div>
-            </footer>
         </div>
     )
 }

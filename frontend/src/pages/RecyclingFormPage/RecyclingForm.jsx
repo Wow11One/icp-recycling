@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { Recycle, MapPin, MessageSquare, Upload, X } from "lucide-react"
+import React from "react";
+import toastNotifications from "../../utils/toastNotifications.utils";
+import { idlFactory, canisterId } from "./declarations/storage";
 
 const RecyclingForm = () => {
     const [formData, setFormData] = useState({
@@ -38,25 +41,58 @@ const RecyclingForm = () => {
         setPhotoPreview(null)
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        setIsSubmitting(true)
+    const getCityAndCountry = (lat, lon) => {
+        const apiKey = "8739517405194a86adfc82e0c169c068"; // Replace with your API key
+        const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&language=en`;
 
-        // Simulate form submission
-        setTimeout(() => {
-            console.log("Form submitted:", { ...formData, photo })
-            setIsSubmitting(false)
-            setSubmitSuccess(true)
-
-            // Reset form after 3 seconds
-            setTimeout(() => {
-                setFormData({ location: "", comment: "" })
-                setPhoto(null)
-                setPhotoPreview(null)
-                setSubmitSuccess(false)
-            }, 3000)
-        }, 1500)
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results.length > 0) {
+                    const location = data.results[0].components;
+                    const city = location.city || location.town || location.village;
+                    const country = location.country;
+                    console.log(`City: ${city}, Country: ${country}`);
+                    setFormData({
+                        ...formData,
+                        location: `${city}, ${country}`,
+                    })
+                } else {
+                    console.log("Location not found.");
+                }
+            })
+            .catch(() => console.log("Error fetching location data."));
     }
+
+    const getUserLocation = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    }
+
+    const success = (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        getCityAndCountry(latitude, longitude);
+    }
+
+    const error = () => {
+        alert("Unable to retrieve your location.");
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!actor || !photo) return;
+
+        try {
+            await actor.store_data(photo, formData.comment, formData.location);
+            toastNotifications.success("Recycling data stored successfully!");
+        } catch (error) {
+            console.error("Failed to store data:", error);
+        }
+    };
 
     return (
         <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md border border-green-200">
@@ -94,7 +130,7 @@ const RecyclingForm = () => {
                                 </button>
                             </div>
                         ) : (
-                            <div className="border-2 border-dashed border-green-300 rounded-lg p-6 text-center bg-green-50">
+                            <div className="relative border-2 border-dashed border-green-300 rounded-lg p-6 text-center bg-green-50">
                                 <div className="flex flex-col items-center justify-center space-y-2">
                                     <Upload className="h-10 w-10 text-green-500" />
                                     <p className="text-sm text-green-800">Drag and drop your photo here, or click to browse</p>
@@ -106,7 +142,7 @@ const RecyclingForm = () => {
                                     name="photo"
                                     accept="image/*"
                                     onChange={handlePhotoChange}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    className="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer"
                                     required
                                 />
                             </div>
@@ -132,8 +168,14 @@ const RecyclingForm = () => {
                                 className="pl-10 w-full rounded-md border border-green-300 py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                                 required
                             />
+                            </div>
+                            <span 
+                                onClick={() => getUserLocation()}
+                                className="text-xs cursor-pointer transition-all duration-300 hover:text-green-500 text-green-400 underline underline-offset-2 mt-3"
+                            >
+                                Determine location automatically.
+                            </span>
                         </div>
-                    </div>
 
                     {/* Comment Input */}
                     <div className="space-y-2">

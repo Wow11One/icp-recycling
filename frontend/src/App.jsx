@@ -13,13 +13,21 @@ import RecyclingFormPage from './pages/RecyclingFormPage';
 import { BrowserRouter, Navigate, Route, Routes, Outlet } from 'react-router-dom';
 import BonusShopPage from './pages/BonusShopPage';
 import MyNFTsPage from './pages/MyNFTsPage';
+import LoginPage from './pages/LoginPage';
+import HeaderFooterLayout from './layout/HeaderFooterLayout';
+import ProfilePage from './pages/ProfilePage';
+import AuthLayout from './layout/AuthLayout';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isFetchingAuthentication, setIsFetchingAuthentication] = useState(true);
   const [totalSupply, setTotalSupply] = useState('');
   const [actor, setActor] = useState();
   const [tokenCreated, setTokenCreated] = useState(false);
   const [decimals, setDecimals] = useState(0n);
+  const [principal, setPrincipal] = useState();
+
+  console.log('principal', principal)
 
   const updateSupply = async () => {
     try {
@@ -49,20 +57,45 @@ const App = () => {
   }, [isAuthenticated, tokenCreated]);
 
   useEffect(() => {
-    if (actor) {
-      checkTokenCreated();
-    }
+    
   }, [actor]);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route index path={ApplicationRoutes.HomePage} element={<HomePage />} />
-        <Route path={ApplicationRoutes.RecyclingForm} element={<RecyclingFormPage />} />
-        <Route path={ApplicationRoutes.BonusShopPage} element={<BonusShopPage />} />
-        <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
-        
-        {/* <div className='min-h-screen bg-gray-100'>
+        <Route
+          element={
+            <HeaderFooterLayout
+              actor={actor}
+              setActor={setActor}
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+              tokenCreated={tokenCreated}
+              setTokenCreated={setTokenCreated}
+              setIsFetchingAuthentication={setIsFetchingAuthentication}
+            />
+          }
+        >
+          <Route index path={ApplicationRoutes.HomePage} element={<HomePage />} />
+            <Route
+              path={ApplicationRoutes.LoginPage}
+              element={
+                <LoginPage
+                  setActor={setActor}
+                  isAuthenticated={isAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
+                  setPrincipal={setPrincipal}
+                />
+              }
+            />
+          <Route element={<AuthLayout actor={actor} isFetchingAuthentication={isFetchingAuthentication} isAuthenticated={isAuthenticated} />} >
+            <Route path={ApplicationRoutes.RecyclingForm} element={<RecyclingFormPage />} />
+            <Route path={ApplicationRoutes.BonusShopPage} element={<BonusShopPage />} />
+            <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
+            <Route path={ApplicationRoutes.Profile} element={<ProfilePage principal={principal} actor={actor} />} />
+          </Route>
+
+          {/* <div className='min-h-screen bg-gray-100'>
         <Header
           actor={actor}
           setActor={setActor}
@@ -97,7 +130,7 @@ const App = () => {
           </div>
         )}
       </div> */}
-
+        </Route>
       </Routes>
     </BrowserRouter>
   );

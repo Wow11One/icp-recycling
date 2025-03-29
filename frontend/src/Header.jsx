@@ -2,7 +2,7 @@ import React from 'react';
 import InternetIdentity from './InternetIdentity';
 import { canisterId } from 'declarations/backend';
 
-const Header = ({ actor, setActor, isAuthenticated, setIsAuthenticated, tokenCreated, setTokenCreated }) => {
+const Header = ({ actor, setActor, isAuthenticated, setIsAuthenticated, tokenCreated, setTokenCreated, setIsFetchingAuthentication }) => {
   const handleDeleteToken = async () => {
     try {
       const result = await actor.delete_token();
@@ -20,13 +20,8 @@ const Header = ({ actor, setActor, isAuthenticated, setIsAuthenticated, tokenCre
   return (
     <header className="bg-infinite mb-2 p-4 text-white">
       <div className="mx-auto flex flex-row flex-wrap items-center justify-between gap-2">
-        <h1 className="text-4xl font-bold">Tokenmania</h1>
+        <h1 className="text-4xl font-bold">PoR</h1>
         <div className="flexitems-center">
-          <InternetIdentity
-            setActor={setActor}
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
           {isAuthenticated && tokenCreated && (
             <div>
               <button

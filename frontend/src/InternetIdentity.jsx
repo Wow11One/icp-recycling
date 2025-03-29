@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor, canisterId } from 'declarations/backend';
+import { ApplicationRoutes } from './utils/constants';
+import { Link } from 'react-router-dom';
 
 const network = process.env.DFX_NETWORK;
 const identityProvider =
@@ -8,7 +10,7 @@ const identityProvider =
     ? 'https://identity.ic0.app' // Mainnet
     : 'http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943'; // Local
 
-const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated }) => {
+const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated,  setIsFetchingAuthentication }) => {
   const [authClient, setAuthClient] = useState();
   const [principal, setPrincipal] = useState();
   useEffect(() => {
@@ -16,6 +18,7 @@ const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated }) => 
   }, []);
 
   async function updateActor() {
+    setIsFetchingAuthentication(true);
     const authClient = await AuthClient.create();
     const identity = authClient.getIdentity();
     const actor = createActor(canisterId, {
@@ -29,6 +32,7 @@ const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated }) => 
     setAuthClient(authClient);
     setIsAuthenticated(isAuthenticated);
     setPrincipal(identity.getPrincipal().toString());
+    setIsFetchingAuthentication(false);
   }
 
   async function login() {
@@ -52,18 +56,21 @@ const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated }) => 
           </p>
           <button
             onClick={logout}
-            className="transform rounded-lg bg-red-500 px-3 py-1 text-sm font-bold text-white shadow-md transition duration-300 ease-in-out hover:scale-105 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            className="transform rounded-lg bg-red-500 p-2.5 text-sm font-bold text-white shadow-md transition duration-300 ease-in-out hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           >
             Sign Out
           </button>
         </>
       ) : (
-        <button
-          onClick={login}
-          className="transform rounded-lg bg-white px-3 py-1 text-sm font-bold text-blue-600 shadow-md transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-        >
-          Sign In with Internet Identity
-        </button>
+        <>
+          {/* <button
+            onClick={login}
+            className="transform rounded-lg bg-white px-3 py-1 text-sm font-bold text-blue-600 shadow-md transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+          >
+            Sign In with Internet Identity
+          </button> */}
+            <Link to={ApplicationRoutes.LoginPage} className="secondary-button">Sign in</Link>
+        </>
       )}
     </div>
   );

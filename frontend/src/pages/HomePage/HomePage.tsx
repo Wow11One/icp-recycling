@@ -4,44 +4,6 @@ import React from "react";
 export default function HomePage() {
     return (
         <div className="flex min-h-screen flex-col justify-center">
-            {/* Header */}
-            <header className="sticky top-0 z-40 w-full border-b bg-white">
-                <div className="container flex h-16 items-center justify-between py-4 px-10">
-                    <div className="flex items-center gap-2">
-                        <Recycle className="h-6 w-6 text-green-600" />
-                        <span className="text-xl font-bold text-green-600">ICP Recycling</span>
-                    </div>
-
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-6">
-                        <a href="#" className="text-sm font-medium text-gray-600 hover:text-green-600">
-                            Home
-                        </a>
-                        <a href="#services" className="text-sm font-medium text-gray-600 hover:text-green-600">
-                            Services
-                        </a>
-                        <a href="#impact" className="text-sm font-medium text-gray-600 hover:text-green-600">
-                            Impact
-                        </a>
-                        <a href="#about" className="text-sm font-medium text-gray-600 hover:text-green-600">
-                            About Us
-                        </a>
-                        <a href="#contact" className="text-sm font-medium text-gray-600 hover:text-green-600">
-                            Contact
-                        </a>
-                    </nav>
-
-                    <div className="flex items-center gap-4">
-                        <button className="hidden md:flex primary-button">Get Started</button>
-
-                        <button className="md:hidden">
-                            <Menu className="h-5 w-5" />
-                            <span className="sr-only">Toggle menu</span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
             <main className="flex-1">
                 <section className="py-12 md:py-24 lg:py-32 bg-green-50">
                     <div className="container px-4 md:px-12 mx-auto">
@@ -167,7 +129,7 @@ export default function HomePage() {
 
                 {/* How It Works */}
                 <section className="w-full py-12 md:py-24 lg:py-32">
-                    <div className="container w-full px-4 md:px-6">
+                    <div className="container w-full px-4 md:px-6 mx-auto">
                         <div className="flex flex-col items-center justify-center space-y-4 text-center">
                             <div className="space-y-2">
                                 <div className="inline-block rounded-lg bg-green-100 px-3 py-1 text-sm text-green-800">Process</div>
@@ -178,29 +140,29 @@ export default function HomePage() {
                             </div>
                         </div>
 
-                        <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 md:grid-cols-3">
+                        <div className="grid max-w-5xl items-start gap-6 py-12 md:grid-cols-3 mx-auto">
                             {/* Step 1 */}
                             <div className="flex flex-col items-center space-y-4">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white">1</div>
-                                <h3 className="text-xl font-bold text-green-800">Schedule Pickup</h3>
-                                <p className="text-center text-gray-600">Book a convenient time for us to collect your recyclables.</p>
+                                <h3 className="text-xl font-bold text-green-800">Prove your contribution</h3>
+                                <p className="text-center text-gray-600">Make a photo with wastes you recycle to get tokens.</p>
                             </div>
 
                             {/* Step 2 */}
                             <div className="flex flex-col items-center space-y-4">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white">2</div>
-                                <h3 className="text-xl font-bold text-green-800">We Collect</h3>
+                                <h3 className="text-xl font-bold text-green-800">Get bonuses</h3>
                                 <p className="text-center text-gray-600">
-                                    Our team picks up your sorted recyclables from your location.
+                                    Get deserved bonuses as tokens after you approved your recycling.
                                 </p>
                             </div>
 
                             {/* Step 3 */}
                             <div className="flex flex-col items-center space-y-4">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white">3</div>
-                                <h3 className="text-xl font-bold text-green-800">Track Impact</h3>
+                                <h3 className="text-xl font-bold text-green-800">Exchange tokens for bonuses</h3>
                                 <p className="text-center text-gray-600">
-                                    Monitor your environmental contribution through our dashboard.
+                                    Use earned tokens to get bonuses from our partners.
                                 </p>
                             </div>
                         </div>
@@ -234,77 +196,6 @@ export default function HomePage() {
                     </div>
                 </section>
             </main>
-
-            {/* Footer */}
-            <footer className="w-full border-t bg-white py-6">
-                <div className="container px-4 md:px-6">
-                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                                <Recycle className="h-6 w-6 text-green-600" />
-                                <span className="text-xl font-bold text-green-600">EcoRecycle</span>
-                            </div>
-                            <p className="text-sm text-gray-600">Making the world greener through sustainable recycling solutions.</p>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-green-800">Quick Links</h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <a href="#" className="text-sm text-gray-600 hover:text-green-600">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#services" className="text-sm text-gray-600 hover:text-green-600">
-                                        Services
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#impact" className="text-sm text-gray-600 hover:text-green-600">
-                                        Impact
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#about" className="text-sm text-gray-600 hover:text-green-600">
-                                        About Us
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-green-800">Contact</h3>
-                            <ul className="space-y-2">
-                                <li className="text-sm text-gray-600">123 Green Street, Eco City</li>
-                                <li className="text-sm text-gray-600">info@ecorecycle.com</li>
-                                <li className="text-sm text-gray-600">(123) 456-7890</li>
-                            </ul>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-green-800">Subscribe</h3>
-                            <form className="flex gap-2">
-                                <input
-                                    type="email"
-                                    placeholder="Email"
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-                                />
-                                <button className="primary-button">
-                                    <ArrowRight className="h-4 w-4" />
-                                </button>
-                            </form>
-                            <p className="text-xs text-gray-600">Subscribe to our newsletter for tips and updates.</p>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 border-t pt-6">
-                        <p className="text-center text-xs text-gray-600">
-                            © 2025,  EcoRecycle. All rights reserved.
-                        </p>
-                    </div>
-                </div>
-            </footer>
         </div>
     )
 }
