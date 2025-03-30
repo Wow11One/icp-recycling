@@ -1,5 +1,21 @@
 {
   "canisters": {
+    "nft": {
+      "candid": "nft/nft.did",
+      "type": "custom",
+      "shrink": true,
+      "gzip": true,
+      "wasm": "target/wasm32-unknown-unknown/release/nft.wasm",
+      "build": [
+        "cargo build --target wasm32-unknown-unknown --release -p nft",
+        "candid-extractor target/wasm32-unknown-unknown/release/nft.wasm > nft/nft.did"
+      ],
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ]
+    },
     "dip20": {
       "candid": "dip20/dip20.did",
       "type": "custom",
