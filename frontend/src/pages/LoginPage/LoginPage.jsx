@@ -59,6 +59,7 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
 
   useEffect(() => {
     updateActor();
+    window.scrollTo({ top: 0 });
   }, []);
 
   return (
@@ -72,7 +73,7 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
               <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
                 <LogIn className="h-8 w-8 text-green-600" />
               </div>
-              <h1 className="text-2xl font-bold text-green-800">Welcome to EcoRecycle</h1>
+              <h1 className="text-2xl font-bold text-green-800">Welcome to PoR</h1>
               <p className="text-gray-600 mt-2">Sign in with Internet Identity to access your account</p>
             </div>
 

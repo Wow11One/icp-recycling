@@ -1,29 +1,33 @@
 import { Recycle, Leaf, TreePine, ArrowRight, Menu } from "lucide-react"
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function HomePage() {
+    useEffect(() => {
+        window.scrollTo({ top: 0 });
+    }, []);
+
     return (
         <div className="flex min-h-screen flex-col justify-center">
             <main className="flex-1">
                 <section className="py-12 md:py-24 lg:py-32 bg-green-50">
                     <div className="container px-4 md:px-12 mx-auto">
-                        <div className="flex justify-between">
-                            <div className="space-y-8 max-w-3xl">
-                                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-green-800">
+                        <div className="flex justify-center">
+                            <div className="space-y-12 max-w-[850px]">
+                                <h1 className="text-3xl text-center font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-green-800">
                                     Make Our Planet Greener One Recycle at a Time
                                 </h1>
-                                <p className="max-w-[600px] text-gray-600 md:text-xl">
+                                <p className="text-center text-gray-600 md:text-xl">
                                     Join our mission to create a sustainable future through responsible recycling. Together, we can reduce
                                     waste and protect our environment.
                                 </p>
-                                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                                <div className="flex flex-col justify-center gap-2 min-[400px]:flex-row">
                                     <button className="primary-button">Start recycling today</button>
                                     <button className="secondary-button">
                                         Learn More
                                     </button>
                                 </div>
                             </div>
-                            <div className="flex justify-center">
+                            {/* <div className="flex justify-center">
                                 <img
                                     src="icp-recycling.jpg"
                                     alt="Recycling illustration"
@@ -31,7 +35,7 @@ export default function HomePage() {
                                     height={400}
                                     className="rounded-lg object-cover"
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </section>

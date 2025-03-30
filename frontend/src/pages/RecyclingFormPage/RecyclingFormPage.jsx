@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom"
 import RecyclingForm from "./RecyclingForm"
 import { Recycle } from "lucide-react"
-import React from "react"
+import React, { useEffect } from "react"
 import { Principal } from "@dfinity/candid/lib/cjs/idl"
 
 export default function RecyclingFormPage({ principal }) {
-  console.log('principal', principal)
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
   return (
     <div className="min-h-screen bg-green-50">
 

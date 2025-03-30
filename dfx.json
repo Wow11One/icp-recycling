@@ -1,5 +1,21 @@
 {
   "canisters": {
+    "dip20": {
+      "candid": "dip20/dip20.did",
+      "type": "custom",
+      "shrink": true,
+      "gzip": true,
+      "wasm": "target/wasm32-unknown-unknown/release/dip20.wasm",
+      "build": [
+        "cargo build --target wasm32-unknown-unknown --release -p dip20",
+        "candid-extractor target/wasm32-unknown-unknown/release/dip20.wasm > dip20/dip20.did"
+      ],
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ]
+    },
     "storage": {
       "candid": "storage/storage.did",
       "type": "custom",
@@ -45,7 +61,7 @@
       "frontend": {}
     },
     "frontend": {
-      "dependencies": ["backend", "storage"],
+      "dependencies": ["backend", "storage", "dip20"],
       "frontend": {
         "entrypoint": "frontend/index.html"
       },

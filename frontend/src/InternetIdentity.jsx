@@ -52,7 +52,7 @@ const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated,  setI
       {isAuthenticated ? (
         <>
           <p className="text-sm">
-            <span className="font-mono">{principal}</span>
+            {/* <span className="font-mono">{principal}</span> */}
           </p>
           <button
             onClick={logout}

@@ -150,6 +150,10 @@ function MyNftsPage() {
         alert(`You've successfully used your "${selectedNft.title}" NFT!`)
     }
 
+    useEffect(() => {
+        window.scrollTo({ top: 0 });
+    }, []);
+
     return (
         <div className="min-h-screen bg-green-50">
             {/* Main Content */}

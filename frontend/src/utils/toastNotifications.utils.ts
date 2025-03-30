@@ -17,7 +17,6 @@ const toastNotifications = {
             style: {
                 backgroundColor: 'white',
                 color: 'blue',
-                border: '2px solid blue',
             },
         });
     },

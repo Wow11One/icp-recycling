@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Recycle, ArrowLeft, Leaf, Gift, ShoppingBag, Coffee, Ticket, Award, AlertCircle } from 'lucide-react';
 
@@ -85,6 +85,10 @@ function BonusShopPage() {
       alert(`Successfully exchanged for "${selectedNft.title}" NFT!`);
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
 
   return (
     <div className="min-h-screen bg-green-50">

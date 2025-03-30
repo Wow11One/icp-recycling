@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { Recycle, MapPin, MessageSquare, Upload, X } from "lucide-react"
 import React from "react";
 import toastNotifications from "../../utils/toastNotifications.utils";
-import { idlFactory, canisterId, storage as storageCanisterId, createActor } from "declarations/storage";
+import { idlFactory, canisterId as storageCanisterId, storage , createActor as createStorageActor } from "declarations/storage";
+import { canisterId as dip20CanisterId , createActor as createDip20Actor } from "declarations/dip20";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import imageCompression from 'browser-image-compression';
@@ -16,7 +17,6 @@ const RecyclingForm = ({ principal }) => {
     const [photoPreview, setPhotoPreview] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitSuccess, setSubmitSuccess] = useState(false)
-    const [actor, setActor] = useState()
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -46,7 +46,7 @@ const RecyclingForm = ({ principal }) => {
     }
 
     const getCityAndCountry = (lat, lon) => {
-        const apiKey = "8739517405194a86adfc82e0c169c068"; // Replace with your API key
+        const apiKey = "8739517405194a86adfc82e0c169c068";
         const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&language=en`;
 
         fetch(url)
@@ -63,10 +63,10 @@ const RecyclingForm = ({ principal }) => {
                     })
                     toastNotifications.info('Location fetched successfully!')
                 } else {
-                    console.log("Location not found.");
+                    toastNotifications.error("Location not found.");
                 }
             })
-            .catch(() => console.log("Error fetching location data."));
+            .catch(() => toastNotifications.error("Error fetching location data."));
     }
 
     const getUserLocation = () => {
@@ -105,13 +105,21 @@ const RecyclingForm = ({ principal }) => {
             const byteArray = new Uint8Array(arrayBuffer);
             const authClient = await AuthClient.create();
             const identity = authClient.getIdentity();
-            const actor = createActor(canisterId, {
+            const storageActor = createStorageActor(storageCanisterId, {
+                agentOptions: {
+                    identity
+                }
+            });
+            const dip20Actor = createDip20Actor(dip20CanisterId, {
                 agentOptions: {
                     identity
                 }
             });
 
-            await actor.store_data(byteArray, formData.comment, formData.location);
+            await storageActor.store_data(byteArray, formData.comment, formData.location);
+            const mintRes = await dip20Actor.mint(principal.getPrincipal().toString(), BigInt(1000));
+            console.log(mintRes)
+
             toastNotifications.success("Recycling data stored successfully!");
             setPhotoPreview(null);
             setPhoto(null);
@@ -152,7 +160,7 @@ const RecyclingForm = ({ principal }) => {
                                 <img
                                     src={photoPreview || "/placeholder.svg"}
                                     alt="Recycling proof preview"
-                                    className="w-full h-64 object-cover rounded-lg border border-green-200"
+                                    className="w-full h-80 object-contain rounded-lg border border-green-200"
                                 />
                                 <button
                                     type="button"
