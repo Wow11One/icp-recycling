@@ -68,7 +68,7 @@ const recentActivity = [
   }
 ];
 
-function ProfilePage({ principal }) {
+function ProfilePage({ principal, authClient }) {
   const [activeTab, setActiveTab] = useState("activity");
   const [actor, setActor] = useState();
   const [porBalance, setPorBalance] = useState(0);
@@ -85,7 +85,6 @@ function ProfilePage({ principal }) {
   const initData = async () => {
     setIsFetching(true)
     try {
-      const authClient = await AuthClient.create();
       const identity = authClient.getIdentity();
       const dip20Actor = createDip20Actor(dip20CanisterId, {
         agentOptions: {
@@ -105,11 +104,9 @@ function ProfilePage({ principal }) {
       );
 
       const usersRecycleRecords = await storageActor.get_recycle_data(principal.getPrincipal().toString())
-      await setRecycleRecords(usersRecycleRecords)
+      setRecycleRecords(usersRecycleRecords)
     } catch (err) {
       console.log(err)
-    } finally {
-      setIsFetching(false);
     }
   };
 
@@ -118,7 +115,7 @@ function ProfilePage({ principal }) {
     async function init() {
      await initData();
     }
-    init();
+    init().finally(() => setIsFetching(false));
   }, []);
 
   return (

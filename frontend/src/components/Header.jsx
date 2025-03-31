@@ -4,7 +4,12 @@ import { ApplicationRoutes } from '../utils/constants'
 import { Recycle, Infinity } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const Header = ({ actor, setActor, isAuthenticated, setIsAuthenticated, tokenCreated, setTokenCreated, setIsFetchingAuthentication }) => {
+const Header = ({ actor, setActor, isAuthenticated, 
+    setIsAuthenticated, 
+    tokenCreated, setTokenCreated, setIsFetchingAuthentication,
+    authClient, setAuthClient
+
+ }) => {
     return (
         <header className="sticky top-0 z-40 w-full border-b bg-white">
             <div className="container flex h-16 items-center justify-between py-4 px-10 mx-auto">
@@ -38,6 +43,8 @@ const Header = ({ actor, setActor, isAuthenticated, setIsAuthenticated, tokenCre
                         isAuthenticated={isAuthenticated}
                         setIsAuthenticated={setIsAuthenticated}
                         setIsFetchingAuthentication={setIsFetchingAuthentication}
+                        setAuthClient={setAuthClient}
+                        authClient={authClient}
                     />
 
                     {/* <button className="md:hidden">

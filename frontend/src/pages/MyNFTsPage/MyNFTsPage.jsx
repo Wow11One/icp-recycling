@@ -93,6 +93,8 @@ const categoryIcons = {
 }
 
 function MyNftsPage() {
+    const myNfts = JSON.parse(localStorage.getItem('my-nfts') || '[]');
+    console.log(myNfts)
     const [filter, setFilter] = useState("all") // all, unused, used
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedNft, setSelectedNft] = useState(null)
@@ -216,7 +218,7 @@ function MyNftsPage() {
                         {/* NFT List */}
                         <div className={`${selectedNft ? "hidden lg:block" : ""} lg:col-span-${selectedNft ? "1" : "3"}`}>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-                                {filteredNfts.map((nft) => (
+                                {myNfts.map((nft) => (
                                     <div
                                         key={nft.id}
                                         onClick={() => handleNftSelect(nft)}
@@ -317,12 +319,12 @@ function MyNftsPage() {
                                                             : "bg-gray-100 text-gray-800"
                                                         }`}
                                                 >
-                                                    {selectedNft.status === "unused" ? (
+                                                    {selectedNft.status !== "unused" ? (
                                                         <CheckCircle className="h-3.5 w-3.5" />
                                                     ) : (
                                                         <Clock className="h-3.5 w-3.5" />
                                                     )}
-                                                    {selectedNft.status === "unused" ? "Available" : "Used"}
+                                                    {selectedNft.status !== "unused" ? "Available" : "Used"}
                                                 </div>
                                             </div>
 
@@ -361,7 +363,7 @@ function MyNftsPage() {
                                         <div className="p-6 bg-gray-50 flex flex-col">
                                             <h3 className="text-lg font-bold text-green-800 mb-4">Redemption Details</h3>
 
-                                            {selectedNft.status === "unused" ? (
+                                            {selectedNft.status !== "used" ? (
                                                 <>
                                                     <div className="bg-white p-4 rounded-lg border border-gray-200 mb-4">
                                                         {showQrCode ? (
@@ -387,7 +389,7 @@ function MyNftsPage() {
                                                                 <p className="text-sm text-gray-600 mb-2">Redemption Code:</p>
                                                                 <div className="flex items-center gap-2 mb-4">
                                                                     <div className="bg-gray-100 py-2 px-3 rounded font-mono text-sm flex-grow">
-                                                                        {selectedNft.redemptionCode}
+                                                                        {selectedNft.id}
                                                                     </div>
                                                                     <button
                                                                         onClick={() => handleCopyCode(selectedNft.redemptionCode)}

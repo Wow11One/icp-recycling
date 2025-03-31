@@ -27,6 +27,7 @@ const App = () => {
   const [tokenCreated, setTokenCreated] = useState(false);
   const [decimals, setDecimals] = useState(0n);
   const [principal, setPrincipal] = useState();
+  const [authClient, setAuthClient] = useState();
 
   console.log('principal', principal)
 
@@ -75,6 +76,8 @@ const App = () => {
               tokenCreated={tokenCreated}
               setTokenCreated={setTokenCreated}
               setIsFetchingAuthentication={setIsFetchingAuthentication}
+              authClient={authClient} 
+              setAuthClient={setAuthClient}
             />
           }
         >
@@ -92,9 +95,9 @@ const App = () => {
             />
           <Route element={<AuthLayout actor={actor} isFetchingAuthentication={isFetchingAuthentication} isAuthenticated={isAuthenticated} />} >
             <Route path={ApplicationRoutes.RecyclingForm} element={<RecyclingFormPage principal={principal} />} />
-            <Route path={ApplicationRoutes.BonusShopPage} element={<BonusShopPage />} />
+            <Route path={ApplicationRoutes.BonusShopPage} element={<BonusShopPage authClient={authClient} principal={principal} />} />
             <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
-            <Route path={ApplicationRoutes.Profile} element={<ProfilePage principal={principal} actor={actor} />} />
+            <Route path={ApplicationRoutes.Profile} element={<ProfilePage authClient={authClient} principal={principal} />} />
           </Route>
 
           {/* <div className='min-h-screen bg-gray-100'>

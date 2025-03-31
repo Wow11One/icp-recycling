@@ -2,7 +2,14 @@ import React from 'react';
 import InternetIdentity from './InternetIdentity';
 import { canisterId } from 'declarations/backend';
 
-const Header = ({ actor, setActor, isAuthenticated, setIsAuthenticated, tokenCreated, setTokenCreated, setIsFetchingAuthentication }) => {
+const Header = ({ actor, setActor, isAuthenticated,
+  setIsAuthenticated, tokenCreated,
+  setTokenCreated, 
+  setIsFetchingAuthentication,
+  authClient, 
+  setAuthClient
+
+}) => {
   const handleDeleteToken = async () => {
     try {
       const result = await actor.delete_token();

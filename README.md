@@ -1,51 +1,42 @@
-# proof-of-recycling!
+# Proof of recycling
 
-![Tokenmania](https://icp.ninja/examples/_attachments/tokenmania.jpg)
+![PoR](https://res.cloudinary.com/dbkgbcqcf/image/upload/v1743410699/PoR_lglivd.png)
 
-Tokenmania is a simplified token minting application. When the application is ran, it will automatically mint tokens based on the backend smart contract's hardcoded configuration values for things such as token name, token symbol, and total supply.
+The project aims to promote environmental responsibility among Ukrainian citizens through the use of **ICP** (Internet Computer Protocol) blockchain technology.
 
-> [!CAUTION]
-> This sample application is not production-ready code. Actual tokens deployed on ICP will require a ledger and an index smart contract. For this example's demonstration, this functionality has been simplified and the ledger functionality has been included in the backend. Tokens deployed using this example are only available for 20 minutes and will be deleted afterwards. They should be treated as "testnet" assets and should not be given real value.
-> For more information on creating tokens using a recommended production workflow, view the [create a token documentation](https://internetcomputer.org/docs/current/developer-docs/defi/tokens/create).
-
-This example application is written in [Rust](https://internetcomputer.org/docs/building-apps/developer-tools/cdks/rust/intro-to-rust).
-
-## What is ICP Ninja?
-
-ICP Ninja is a web-based integrated development environment (IDE) for the Internet Computer. It allows you to write code and deploy applications directly from your web browser in a temporary, sandbox-like environment.
-
-For users who may already be familiar with the Internet Computer or who would rather use more **advanced tooling** such as command-line development tools, please refer to the [ICP developer documentation](https://internetcomputer.org/docs/building-apps/getting-started/install) to learn more.
-
-Projects deployed to ICP from ICP Ninja are available on the mainnet for 20 minutes at a time. After 20 minutes, the project must be redeployed.
-
-To deploy your project for long-term, production use such that it persists longer than 20 minutes without needing to be redeployed, you must migrate the files off of ICP Ninja and deploy them to the mainnet via `dfx` in a command-line environment.
+This example application is written in Rust, TypeScript (React).
 
 ## Project structure
 
-The `/backend` folder contains the Rust smart contract:
+ - The `backend` folder contains the Rust smart contract, used mostly for authentication purposes.
+ - The `dip20` folder contains the Rust smart contract, used for DIP20 token logic (currency for bonuses).
+ - The `nft` folder contains the Rust smart contract, used for DIP20 toke logic (bonuses).
+ - The `storage` folder contains the Rust smart contract, built to store recycling records of users.
+ - The `frontend` folder contains web assets for the application's user interface. The user interface is written using the React framework.
 
-- `Cargo.toml`, which defines the crate that will form the backend
-- `lib.rs`, which contains the core logic of the smart contract, and exports its interface
-- `types.rs`, which contains type declarations and some conversion functions to keep the main logic cleaner.
+## Description
 
-The `/frontend` folder contains web assets for the application's user interface. The user interface is written using the React framework.
+he project aims to promote environmental responsibility among Ukrainian citizens through the use of ICP (Internet Computer Protocol) blockchain technology.
 
-## Deploying from ICP Ninja
+Anyone who brings waste to the "Ukraine Without Waste" station receives tokens, which can be used to purchase NFTs that grant discounts at partner store chains as a reward for their contribution to recycling.
 
-When viewing this project in ICP Ninja, you can deploy it directly to the mainnet for free by clicking "Deploy" in the upper right corner.
+## How It Works
 
-To **download** or **reset** the project files, click the menu option next to the deploy button.
+1. A person arrives at the "Ukraine Without Waste" station with recyclable waste.
+2. They take a photo of themselves in front of the station's sign along with the waste they brought.
+3. They upload the photo to a mobile app or web platform powered by ICP.
+4. They receive 1,000 DIP20 tokens in their balance.
+5. On the project's partner offers page, users can purchase three types of DIP721 NFTs, which grant discounts at partner stores.
 
-## Editing files
+## Expected Results
 
-To make adjustments to this project, you can edit any file that is unlocked. Then, redeploy your application to view your changes.
+ - An increase in the number of people who sort and recycle waste.
+ - The development of a culture of environmental responsibility.
+ - The promotion of blockchain and Web3 technology in social initiatives.
+ - The creation of a sustainable incentive mechanism for recycling.
 
-To edit files that are immutable in ICP Ninja, you can export the project to GitHub or download the project to your local environment using the "Download files" option.
+## Links
 
-## Build and deploy from the command-line
-
-To migrate your ICP Ninja project off of the web browser and develop it locally, follow these steps. These steps are necessary if you want to deploy this project for long-term, production use on the mainnet.
-
-### 1. Download your project from ICP Ninja using the 'Download files' button on the upper left corner under the pink ninja star icon.
-
-### 2. Open the `BUILD.md` file for further instructions.
+ - [Presentation link](https://docs.google.com/presentation/d/1HwgGLAqxJhjB4TFSljMQF67l3jtmz99O/edit?slide=id.p1#slide=id.p1)
+ - [Demo on Youtube](https://www.youtube.com/watch?v=RbnHCaMm_x8)
+ - [Deployed project on ICP](https://2dwgp-naaaa-aaaan-qzynq-cai.icp0.io/)

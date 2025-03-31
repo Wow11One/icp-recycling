@@ -5,13 +5,12 @@ import { ApplicationRoutes } from './utils/constants';
 import { Link } from 'react-router-dom';
 
 const network = process.env.DFX_NETWORK;
-const identityProvider =
-  network === 'ic'
-    ? 'https://identity.ic0.app' // Mainnet
-    : 'http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943'; // Local
+const identityProvider = 'https://identity.ic0.app'
+  //network === 'ic'
+  // Mainnet
+   // : 'http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943'; // Local
 
-const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated,  setIsFetchingAuthentication }) => {
-  const [authClient, setAuthClient] = useState();
+const InternetIdentity = ({ setActor, isAuthenticated, setIsAuthenticated, setIsFetchingAuthentication, authClient, setAuthClient }) => {
   const [principal, setPrincipal] = useState();
   useEffect(() => {
     updateActor();

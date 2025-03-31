@@ -11,6 +11,8 @@ const HeaderFooterLayout = ({
     tokenCreated,
     setTokenCreated,
     setIsFetchingAuthentication,
+    authClient, 
+    setAuthClient,
 }) => {
     useEffect(() => {
         window.scrollTo({ top: 0 });
@@ -26,6 +28,9 @@ const HeaderFooterLayout = ({
                 tokenCreated={tokenCreated}
                 setTokenCreated={setTokenCreated}
                 setIsFetchingAuthentication={setIsFetchingAuthentication}
+                authClient={authClient}
+                setAuthClient={setAuthClient} 
+
             />
             <Outlet />
             <Footer />
