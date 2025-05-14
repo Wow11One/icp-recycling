@@ -4,39 +4,43 @@ import { fileURLToPath, URL } from 'url';
 import environment from 'vite-plugin-environment';
 
 export default defineConfig({
+  envDir: './env',
   base: './',
-  plugins: [react({
-    include: "**/*.jsx",
-  }), environment('all', { prefix: 'CANISTER_' }), environment('all', { prefix: 'DFX_' })],
-  envDir: '../',
+  plugins: [
+    react({
+      include: '**/*.jsx',
+    }),
+    environment('all', { prefix: 'CANISTER_' }),
+    environment('all', { prefix: 'DFX_' }),
+  ],
   define: {
-    'process.env': process.env
+    'process.env': process.env,
   },
   optimizeDeps: {
     esbuildOptions: {
       define: {
-        global: 'globalThis'
-      }
-    }
+        global: 'globalThis',
+      },
+    },
   },
   resolve: {
     alias: [
       {
         find: 'declarations',
-        replacement: fileURLToPath(new URL('../src/declarations', import.meta.url))
-      }
-    ]
+        replacement: fileURLToPath(new URL('../src/declarations', import.meta.url)),
+      },
+    ],
   },
   server: {
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:4943',
-        changeOrigin: true
-      }
+        changeOrigin: true,
+      },
     },
     host: '127.0.0.1',
     watch: {
       usePolling: true,
-    }
-  }
+    },
+  },
 });

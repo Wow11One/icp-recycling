@@ -16,7 +16,7 @@ This example application is written in Rust, TypeScript (React).
 
 ## Description
 
-he project aims to promote environmental responsibility among Ukrainian citizens through the use of ICP (Internet Computer Protocol) blockchain technology.
+The project aims to promote environmental responsibility among Ukrainian citizens through the use of ICP (Internet Computer Protocol) blockchain technology.
 
 Anyone who brings waste to the "Ukraine Without Waste" station receives tokens, which can be used to purchase NFTs that grant discounts at partner store chains as a reward for their contribution to recycling.
 
