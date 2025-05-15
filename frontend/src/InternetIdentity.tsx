@@ -3,12 +3,9 @@ import { AuthClient } from '@dfinity/auth-client';
 import { createActor, canisterId } from 'declarations/backend';
 import { ApplicationRoutes } from './utils/constants';
 import { Link } from 'react-router-dom';
+import { useAuth } from './hooks/auth.hooks';
 
 const network = process.env.DFX_NETWORK;
-const identityProvider = 'https://identity.ic0.app';
-//network === 'ic'
-// Mainnet
-// : 'http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943'; // Local
 
 const InternetIdentity = ({
   setActor,
@@ -18,6 +15,7 @@ const InternetIdentity = ({
   authClient,
   setAuthClient,
 }) => {
+  const { solanaIdentity, setSolanaIdentity } = useAuth();
   const [principal, setPrincipal] = useState();
   useEffect(() => {
     updateActor();
@@ -41,21 +39,15 @@ const InternetIdentity = ({
     setIsFetchingAuthentication(false);
   }
 
-  async function login() {
-    await authClient.login({
-      identityProvider,
-      onSuccess: updateActor,
-    });
-  }
-
   async function logout() {
     await authClient.logout();
+    setSolanaIdentity(null);
     updateActor();
   }
 
   return (
     <div className='flex items-center space-x-4'>
-      {isAuthenticated ? (
+      {isAuthenticated || solanaIdentity ? (
         <>
           <p className='text-sm'>{/* <span className="font-mono">{principal}</span> */}</p>
           <button
@@ -67,12 +59,6 @@ const InternetIdentity = ({
         </>
       ) : (
         <>
-          {/* <button
-            onClick={login}
-            className="transform rounded-lg bg-white px-3 py-1 text-sm font-bold text-blue-600 shadow-md transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-          >
-            Sign In with Internet Identity
-          </button> */}
           <Link to={ApplicationRoutes.LoginPage} className='secondary-button'>
             Sign in
           </Link>

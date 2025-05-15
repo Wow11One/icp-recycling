@@ -6,4 +6,5 @@ export const ApplicationRoutes = {
     MyNFTsPage: '/my-nfts',
     LoginPage: 'login',
     Profile: '/profile',
+    NftMintPage: '/nft-mint-page',
 };

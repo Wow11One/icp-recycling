@@ -27,3 +27,24 @@ export const CheckCirlceIcon = ({ ...props }) => {
     </svg>
   );
 };
+
+export const CrossIcon = ({ ...props }) => {
+  return (
+    <svg
+      width='45'
+      height='45'
+      viewBox='0 0 45 45'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path
+        d='M31.6406 13.3594L13.3594 31.6406M13.3594 13.3594L31.6406 31.6406'
+        stroke='currentColor'
+        strokeWidth='2.34375'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  );
+};

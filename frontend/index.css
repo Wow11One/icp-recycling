@@ -10,3 +10,16 @@
 .secondary-button {
     @apply bg-white hover:bg-gray-100 text-green-600 border border-green-600 p-2.5 font-semibold transition-all rounded-lg duration-300;
 }
+
+.wallet-adapter-button {
+}
+
+.wallet-adapter-button.wallet-adapter-button-trigger {
+  border: 2px #1effd6 solid;
+    @apply !w-full !flex !items-center !justify-center !gap-2 !py-3 !px-4 !rounded-md !font-medium !bg-white hover:!bg-gray-100 !text-green-600 !border !border-green-600 !p-2.5 !font-semibold !transition-all !rounded-lg !duration-300;
+}
+
+
+.wallet-adapter-dropdown {
+    @apply !w-full;
+}

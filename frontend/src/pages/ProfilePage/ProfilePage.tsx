@@ -90,7 +90,7 @@ function ProfilePage({ principal, authClient }) {
   const [isFetching, setIsFetching] = useState(true);
 
   // Format date for display
-  const formatDate = dateString => {
+  const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });

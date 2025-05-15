@@ -15,6 +15,7 @@ import {
   Ticket,
   Award,
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 const myNfts = [
   {
@@ -401,7 +402,8 @@ function MyNftsPage() {
                                 <div className='bg-white p-4 inline-block rounded-lg border border-gray-200 mb-2'>
                                   {/* This would be a real QR code in production */}
                                   <div className='w-48 h-48 mx-auto bg-gray-200 flex items-center justify-center'>
-                                    <QrCode className='h-24 w-24 text-gray-400' />
+                                    {/* <QrCode className='h-24 w-24 text-gray-400' /> */}
+                                    <QRCodeSVG value={`${window.location.href}`} className='h-full w-full text-gray-400' />
                                   </div>
                                 </div>
                                 <p className='text-sm text-gray-600'>

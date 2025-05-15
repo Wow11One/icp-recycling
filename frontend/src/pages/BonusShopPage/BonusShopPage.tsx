@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   Recycle,
   ArrowLeft,
@@ -15,6 +14,7 @@ import { AuthClient } from '@dfinity/auth-client';
 import { createActor as createDip20Actor, canisterId as dip20CanisterId } from 'declarations/dip20';
 import { createActor as createNftActor, canisterId as nftCanisterId } from 'declarations/nft';
 import toastNotifications from '../../utils/toastNotifications.utils';
+import { useAuth } from '../../hooks/auth.hooks';
 
 // Category icons mapping
 const categoryIcons = {
@@ -26,6 +26,7 @@ const categoryIcons = {
 };
 
 function BonusShopPage({ principal, authClient }) {
+  const { solanaIdentity } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showModal, setShowModal] = useState(false);
   const [selectedNft, setSelectedNft] = useState(null);
@@ -50,14 +51,14 @@ function BonusShopPage({ principal, authClient }) {
         id: Number(selectedNft.id),
       });
       localStorage.setItem('my-nfts', JSON.stringify(nfts));
-      const identity = authClient.getIdentity();
+      const identity = solanaIdentity || authClient.getIdentity();
       const dip20Actor = createDip20Actor(dip20CanisterId, {
         agentOptions: {
           identity,
         },
       });
 
-      //await dip20Actor.burn(principal.getPrincipal().toString(), BigInt(2500));
+      await dip20Actor.burn(principal.getPrincipal().toString(), BigInt(Number(selectedNft.token_cost)));
       toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
     }
   };

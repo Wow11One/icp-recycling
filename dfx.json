@@ -85,7 +85,6 @@
       "frontend": {}
     },
     "frontend": {
-      "dependencies": ["backend", "storage", "dip20"],
       "frontend": {
         "entrypoint": "frontend/index.html"
       },

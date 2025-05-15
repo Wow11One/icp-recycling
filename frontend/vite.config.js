@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'url';
 import environment from 'vite-plugin-environment';
 
 export default defineConfig({
-  envDir: './env',
+  envDir: '../',
   base: './',
   plugins: [
     react({

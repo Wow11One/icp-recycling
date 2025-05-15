@@ -1,8 +1,8 @@
-import React, { useState, useEffect, FC } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { ApplicationRoutes } from './utils/constants';
 import HomePage from './pages/HomePage';
 import RecyclingFormPage from './pages/RecyclingFormPage';
-import { BrowserRouter, Navigate, Route, Routes, Outlet } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import BonusShopPage from './pages/BonusShopPage';
 import MyNFTsPage from './pages/MyNFTsPage';
 import LoginPage from './pages/LoginPage';
@@ -10,12 +10,13 @@ import HeaderFooterLayout from './layout/HeaderFooterLayout';
 import ProfilePage from './pages/ProfilePage';
 import AuthLayout from './layout/AuthLayout';
 import { Slide, ToastContainer } from 'react-toastify';
+import Web3AuthProvider from './providers/Web3AuthProvider';
+import SiwsProvider from './providers/SiwsProvider';
+import { Buffer } from 'buffer';
+import NftMintingPage from './pages/NftMintingPage';
 
-interface Vova {
- a: string;
-};
-
-const App: FC<Vova> = () => {
+const App: FC = () => {
+  window.Buffer = window.Buffer || Buffer;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isFetchingAuthentication, setIsFetchingAuthentication] = useState(true);
   const [totalSupply, setTotalSupply] = useState('');
@@ -57,61 +58,67 @@ const App: FC<Vova> = () => {
   useEffect(() => {}, [actor]);
 
   return (
-    <BrowserRouter>
-      <ToastContainer transition={Slide} theme='light' />
-      <Routes>
-        <Route
-          element={
-            <HeaderFooterLayout
-              actor={actor}
-              setActor={setActor}
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-              tokenCreated={tokenCreated}
-              setTokenCreated={setTokenCreated}
-              setIsFetchingAuthentication={setIsFetchingAuthentication}
-              authClient={authClient}
-              setAuthClient={setAuthClient}
-            />
-          }
-        >
-          <Route index path={ApplicationRoutes.HomePage} element={<HomePage />} />
-          <Route
-            path={ApplicationRoutes.LoginPage}
-            element={
-              <LoginPage
-                setActor={setActor}
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                setPrincipal={setPrincipal}
+    <Web3AuthProvider>
+      <SiwsProvider>
+        <BrowserRouter>
+          <ToastContainer transition={Slide} theme='light' />
+          <Routes>
+            <Route
+              element={
+                <HeaderFooterLayout
+                  actor={actor}
+                  setActor={setActor}
+                  isAuthenticated={isAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
+                  tokenCreated={tokenCreated}
+                  setTokenCreated={setTokenCreated}
+                  setIsFetchingAuthentication={setIsFetchingAuthentication}
+                  authClient={authClient}
+                  setAuthClient={setAuthClient}
+                />
+              }
+            >
+              <Route index path={ApplicationRoutes.HomePage} element={<HomePage />} />
+              <Route
+                path={ApplicationRoutes.LoginPage}
+                element={
+                  <LoginPage
+                    setActor={setActor}
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                    setPrincipal={setPrincipal}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            element={
-              <AuthLayout
-                actor={actor}
-                isFetchingAuthentication={isFetchingAuthentication}
-                isAuthenticated={isAuthenticated}
-              />
-            }
-          >
-            <Route
-              path={ApplicationRoutes.RecyclingForm}
-              element={<RecyclingFormPage principal={principal} />}
-            />
-            <Route
-              path={ApplicationRoutes.BonusShopPage}
-              element={<BonusShopPage authClient={authClient} principal={principal} />}
-            />
-            <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
-            <Route
-              path={ApplicationRoutes.Profile}
-              element={<ProfilePage authClient={authClient} principal={principal} />}
-            />
-          </Route>
+              <Route
+                element={
+                  <AuthLayout
+                    actor={actor}
+                    isFetchingAuthentication={isFetchingAuthentication}
+                    isAuthenticated={isAuthenticated}
+                  />
+                }
+              >
+                <Route
+                  path={ApplicationRoutes.RecyclingForm}
+                  element={<RecyclingFormPage principal={principal} />}
+                />
+                <Route
+                  path={ApplicationRoutes.NftMintPage}
+                  element={<NftMintingPage />}
+                />
+                <Route
+                  path={ApplicationRoutes.BonusShopPage}
+                  element={<BonusShopPage authClient={authClient} principal={principal} />}
+                />
+                <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
+                <Route
+                  path={ApplicationRoutes.Profile}
+                  element={<ProfilePage authClient={authClient} principal={principal} />}
+                />
+              </Route>
 
-          {/* <div className='min-h-screen bg-gray-100'>
+              {/* <div className='min-h-screen bg-gray-100'>
         <Header
           actor={actor}
           setActor={setActor}
@@ -146,9 +153,11 @@ const App: FC<Vova> = () => {
           </div>
         )}
       </div> */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </SiwsProvider>
+    </Web3AuthProvider>
   );
 };
 

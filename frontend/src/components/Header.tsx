@@ -43,6 +43,12 @@ const Header = ({
             My NFTs
           </Link>
           <Link
+            to={ApplicationRoutes.NftMintPage}
+            className='text-sm font-medium text-gray-600 hover:text-green-600'
+          >
+            NFT minting
+          </Link>
+          <Link
             to={ApplicationRoutes.Profile}
             className='text-sm font-medium text-gray-600 hover:text-green-600'
           >

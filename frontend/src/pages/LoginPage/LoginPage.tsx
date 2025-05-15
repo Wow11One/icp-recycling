@@ -4,7 +4,11 @@ import { LogIn, Lock, Info } from 'lucide-react';
 import { createActor, canisterId } from 'declarations/backend';
 import { AuthClient } from '@dfinity/auth-client';
 import { ApplicationRoutes } from '../../utils/constants';
-import ConnectSolanaWalletButton from '../../components/ConnectSolanaWalletButton';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useSiws } from 'ic-siws-js/react';
+import { useAuth } from '../../hooks/auth.hooks';
+import toastNotifications from '../../utils/toastNotifications.utils';
 
 const network = process.env.DFX_NETWORK;
 const identityProvider =
@@ -13,8 +17,16 @@ const identityProvider =
     : 'http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943';
 
 function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal }) {
+  const { login: loginWithSolana, loginStatus, identity: solanaIdentity, clear } = useSiws();
+  const { setSolanaIdentity } = useAuth();
+  const wallet = useWallet();
   const [isConnectingIdentity, setIsConnectingIdentity] = useState(false);
   const [isConnectingSolanaWallet, setIsConnectingSolanaWallet] = useState(false);
+  const formattedIdentity = solanaIdentity
+    ? solanaIdentity.getPrincipal().toString().slice(0, 4) +
+      '...' +
+      solanaIdentity.getPrincipal().toString().slice(-4)
+    : '';
 
   const [authClient, setAuthClient] = useState();
   const navigate = useNavigate();
@@ -29,22 +41,15 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
     });
     const isAuthenticated = await authClient.isAuthenticated();
 
+    console.log('canisterId', canisterId);
     setActor(actor);
     setAuthClient(authClient);
     setIsAuthenticated(isAuthenticated);
     setPrincipal(identity);
+    console.log('identity ic', identity)
   }
 
-  const handleConnectIdentity = () => {
-    setIsConnectingIdentity(true);
-
-    setTimeout(() => {
-      setIsConnectingIdentity(false);
-      alert('This would connect to Internet Identity in production');
-    }, 1500);
-  };
-
-  async function login() {
+  async function loginWithInternetIdentity() {
     setIsConnectingIdentity(true);
     await authClient.login({
       identityProvider,
@@ -57,6 +62,15 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
     });
     setIsConnectingIdentity(false);
   }
+
+  console.log('wallet', wallet)
+  useEffect(() => {
+    if (wallet) {
+      //setState({ ...state, data: { ...state.data, walletId: wallet.publicKey.toBase58() } });
+    } else {
+      //setState({ ...state, data: { ...state.data, walletId: '' } });
+    }
+  }, [wallet]);
 
   useEffect(() => {
     updateActor();
@@ -99,7 +113,7 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
             </button> */}
 
             <button
-              onClick={login}
+              onClick={loginWithInternetIdentity}
               disabled={isConnectingIdentity}
               className={`mb-5 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium secondary-button ${
                 isConnectingIdentity ? 'cursor-not-allowed' : ''
@@ -113,12 +127,12 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
               ) : (
                 <>
                   <img src='/icp-logo.png' className='w-5 h-5' />
-                  Connect Internet Identity
+                  Login with Internet Identity
                 </>
               )}
             </button>
 
-            <button
+            {/* <button
               onClick={login}
               disabled={isConnectingIdentity}
               className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium secondary-button ${
@@ -136,10 +150,48 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
                   Connect Solana Wallet
                 </>
               )}
-            </button>
+            </button> */}
 
-            <ConnectSolanaWalletButton />
+            <WalletMultiButton>
+              <img src='/solana-sol-icon.png' className='w-5 h-5' />
+              Connect Solana Wallet
+            </WalletMultiButton>
 
+            {wallet.publicKey && (
+              <button
+                className='my-5 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium primary-button'
+                disabled={loginStatus === 'logging-in'}
+                onClick={() => {
+                  loginWithSolana()
+                  .then(async (delegetaionIdentity) => {
+                    console.log('delegetaionIdentity', delegetaionIdentity);
+                    // const authClient = await AuthClient.create();
+                    // const identity = delegetaionIdentity;
+                    // const actor = createActor(canisterId, {
+                    //   agentOptions: {
+                    //     identity,
+                    //   },
+                    // });
+                    // const isAuthenticated = await authClient.isAuthenticated();
+
+                    // console.log('isAuthenticated', isAuthenticated);
+                    // setActor(actor);
+                    // setAuthClient(authClient);
+                    // setIsAuthenticated(isAuthenticated);
+                    // setPrincipal(identity);
+                    setSolanaIdentity(delegetaionIdentity as any);
+                    navigate(ApplicationRoutes.Profile);
+
+                    //setPrincipal(delegetaionIdentity);
+                  })
+                  .catch((e) => {
+                    toastNotifications.error(e.message || 'unexpected error occurred while signing in with solana')
+                  });
+                }}
+              >
+                {loginStatus === 'logging-in' ? 'Signing in…' : 'Sign in with Solana'}
+              </button>
+            )}
             <div className='mt-6 bg-green-50 rounded-md p-4 text-sm'>
               <div className='flex items-start gap-3'>
                 <Info className='h-5 w-5 text-green-600 flex-shrink-0 mt-0.5' />

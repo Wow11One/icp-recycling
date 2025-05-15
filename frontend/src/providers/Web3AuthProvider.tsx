@@ -8,10 +8,12 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
   PhantomWalletAdapter,
+  BackpackWaletAdapter
 } from '@solana/wallet-adapter-wallets';
 import Web3AuthContext from '../contexts/Web3AuthContext';
 import { createPortal } from 'react-dom';
-import Modal from '../components/molecules/Modal/Modal';
+import Modal from '../components/Modal';
+
 
 export interface Web3AuthProviderProps {
   children: ReactNode;
@@ -33,10 +35,9 @@ const Web3AuthProvider: FC<Web3AuthProviderProps> = ({ children }) => {
   const [state, setState] = useState(initialState);
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
+  console.log('SolflareWalletAdapter')
   const wallets = useMemo(
     () => [
-      new SolflareWalletAdapter({ network }),
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
       new TorusWalletAdapter(),
@@ -51,7 +52,7 @@ const Web3AuthProvider: FC<Web3AuthProviderProps> = ({ children }) => {
 
   return (
     <Web3AuthContext.Provider value={{ connectWallet }}>
-      <ConnectionProvider endpoint={endpoint}>
+      <ConnectionProvider endpoint={'https://api.devnet.solana.com'}>
         <WalletProvider wallets={wallets} autoConnect>
           <WalletModalProvider>
             {state.isConnectWalletModalVisible && (

@@ -1,5 +1,5 @@
-import { CrossIcon } from 'components/atoms/Icons/Icons';
-import { useOutsideClick } from 'hooks/dom.hooks';
+import { CrossIcon } from '../components/Icons';
+import { useOutsideClick } from '../hooks/dom.hooks';
 import { FC, HTMLAttributes, ReactNode, useEffect } from 'react';
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {

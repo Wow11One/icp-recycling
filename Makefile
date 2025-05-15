@@ -9,7 +9,26 @@ deploy-provider:
 	        salt = \"salt\"; \
           	chain_id = opt \"devnet\"; \
 	        scheme = opt \"http\"; \
-	        statement = opt \"Login to the SIWS/IC demo app\"; \
+	        statement = opt \"Login to the ICP app\"; \
+	        sign_in_expires_in = opt 900000000000; /* 5 minutes */ \
+	        session_expires_in = opt 604800000000000; /* 1 week */ \
+	        targets = opt vec { \
+	            \"$$(dfx canister id ic_siws_provider)\"; \
+	        }; \
+          runtime_features = null; \
+	    } \
+	)"
+	dfx generate ic_siws_provider
+
+deploy-provider-localnet:
+	dfx deploy ic_siws_provider --argument "( \
+	    record { \
+			domain = \"be2us-64aaa-aaaaa-qaabq-cai.localhost:4943\"; \
+	        uri = \"http://be2us-64aaa-aaaaa-qaabq-cai.localhost:4943\"; \
+	        salt = \"salt\"; \
+          	chain_id = opt \"devnet\"; \
+	        scheme = opt \"http\"; \
+	        statement = opt \"Login to the ICP app\"; \
 	        sign_in_expires_in = opt 900000000000; /* 5 minutes */ \
 	        session_expires_in = opt 604800000000000; /* 1 week */ \
 	        targets = opt vec { \
@@ -26,9 +45,9 @@ upgrade-provider:
 			domain = \"localhost:5173\"; \
 	        uri = \"http://localhost:5173\"; \
 	        salt = \"salt\"; \
-          chain_id = opt \"mainnet\"; \
+          	chain_id = opt \"mainnet\"; \
 	        scheme = opt \"http\"; \
-	        statement = opt \"Login to the siws/IC demo app\"; \
+	        statement = opt \"Login to the ICP app\"; \
 	        sign_in_expires_in = opt 300000000000; /* 5 minutes */ \
 	        session_expires_in = opt 604800000000000; /* 1 week */ \
 	        targets = opt vec { \
@@ -40,13 +59,13 @@ upgrade-provider:
 	dfx generate ic_siws_provider
 
 deploy-frontend:
-	npm install
 	dfx deploy frontend
 
 deploy-backend:
 	dfx deploy backend
-	dfx dip20
-	dfx nft
+	dfx deploy dip20
+	dfx deploy nft
+	dfx deploy internet_identity
 
 deploy-all: create-canisters deploy-provider deploy-frontend deploy-backend
 

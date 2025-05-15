@@ -3,9 +3,7 @@ import { Recycle, MapPin, MessageSquare, Upload, X } from 'lucide-react';
 import React from 'react';
 import toastNotifications from '../../utils/toastNotifications.utils';
 import {
-  idlFactory,
   canisterId as storageCanisterId,
-  storage,
   createActor as createStorageActor,
 } from 'declarations/storage';
 import { canisterId as dip20CanisterId, createActor as createDip20Actor } from 'declarations/dip20';
@@ -50,9 +48,9 @@ const RecyclingForm = ({ principal }) => {
     setPhotoPreview(null);
   };
 
-  const getCityAndCountry = (lat, lon) => {
+  const getCityAndCountry = (lat, lon) => {console.log('process.env.OPENCAGE_GEO_API_URL', process.env.OPENCAGE_GEO_API_KEY)
     const apiKey = '8739517405194a86adfc82e0c169c068';
-    const url = `${import.meta.env.OPENCAGE_GEO_API_URL}/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&language=en`;
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&language=en`;
 
     fetch(url)
       .then(response => response.json())

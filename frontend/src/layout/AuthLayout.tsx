@@ -1,10 +1,12 @@
-import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { ApplicationRoutes } from '../utils/constants';
+import { useAuth } from '../hooks/auth.hooks';
 
 const AuthLayout = ({ actor, isAuthenticated, isFetchingAuthentication }) => {
+  const { solanaIdentity } = useAuth();
   console.log('actor', actor);
-  if (!isAuthenticated) {
+
+  if (!isAuthenticated && !solanaIdentity) {
     return <Navigate to={ApplicationRoutes.LoginPage} />;
   }
 
