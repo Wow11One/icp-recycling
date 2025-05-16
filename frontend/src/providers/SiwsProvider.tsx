@@ -6,9 +6,8 @@ export default function SiwsProvider({ children }: { children: React.ReactNode }
   const { wallet } = useWallet();
 
   // Update the SiwsIdentityProvider with the selected wallet adapter
-  console.log('canisterId', 'canisterId')
   return (
-    <SiwsIdentityProvider canisterId={'bw4dl-smaaa-aaaaa-qaacq-cai'} adapter={wallet?.adapter}>
+    <SiwsIdentityProvider canisterId={'by6od-j4aaa-aaaaa-qaadq-cai'} adapter={wallet?.adapter}>
       {children}
     </SiwsIdentityProvider>
   );
