@@ -8,7 +8,6 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
   PhantomWalletAdapter,
-  BackpackWaletAdapter
 } from '@solana/wallet-adapter-wallets';
 import Web3AuthContext from '../contexts/Web3AuthContext';
 import { createPortal } from 'react-dom';

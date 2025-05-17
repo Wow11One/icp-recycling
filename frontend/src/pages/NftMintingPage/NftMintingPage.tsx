@@ -127,13 +127,11 @@ function NftMintingPage() {
 
     setIsSubmitting(true)
 
-    // Simulate form submission
     setTimeout(() => {
       console.log("NFT Minting Form submitted:", { ...formData, image })
       setIsSubmitting(false)
       setSubmitSuccess(true)
 
-      // Reset form after 3 seconds
       setTimeout(() => {
         setFormData({
           name: "",

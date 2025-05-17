@@ -15,8 +15,8 @@ import SiwsProvider from './providers/SiwsProvider';
 import { Buffer } from 'buffer';
 import NftMintingPage from './pages/NftMintingPage';
 
+window.Buffer = window.Buffer || Buffer;
 const App: FC = () => {
-  window.Buffer = window.Buffer || Buffer;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isFetchingAuthentication, setIsFetchingAuthentication] = useState(true);
   const [totalSupply, setTotalSupply] = useState('');

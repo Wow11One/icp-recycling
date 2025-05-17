@@ -4,6 +4,16 @@ import { fileURLToPath, URL } from 'url';
 import environment from 'vite-plugin-environment';
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      plugins: [
+        inject({
+          Buffer: ['buffer', 'Buffer'], // Polyfill Buffer
+          process: ['process', 'default'], // Polyfill process
+        }),
+      ],
+    },
+  },
   envDir: '../',
   base: './',
   plugins: [
@@ -28,6 +38,14 @@ export default defineConfig({
       {
         find: 'declarations',
         replacement: fileURLToPath(new URL('../src/declarations', import.meta.url)),
+        assert: 'assert',
+        buffer: 'buffer',
+        process: 'process',
+        'process/browser': 'process/browser',
+        stream: 'stream-browserify',
+        crypto: 'crypto-browserify',
+        url: 'url',
+        os: 'os-browserify',
       },
     ],
   },

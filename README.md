@@ -2,7 +2,7 @@
 
 ![PoR](https://res.cloudinary.com/dbkgbcqcf/image/upload/v1743410699/PoR_lglivd.png)
 
-The project aims to promote environmental responsibility among Ukrainian citizens through the use of **ICP** (Internet Computer Protocol) blockchain technology.
+The project aims to promote environmental responsibility among Ukrainian citizens through the use of Solana blockchain technology.
 
 This example application is written in Rust, TypeScript (React).
 
@@ -16,7 +16,7 @@ This example application is written in Rust, TypeScript (React).
 
 ## Description
 
-The project aims to promote environmental responsibility among Ukrainian citizens through the use of ICP (Internet Computer Protocol) blockchain technology.
+The project aims to promote environmental responsibility among Ukrainian citizens through the use of Solana blockchain technology.
 
 Anyone who brings waste to the "Ukraine Without Waste" station receives tokens, which can be used to purchase NFTs that grant discounts at partner store chains as a reward for their contribution to recycling.
 
@@ -25,8 +25,8 @@ Anyone who brings waste to the "Ukraine Without Waste" station receives tokens, 
 1. A person arrives at the "Ukraine Without Waste" station with recyclable waste.
 2. They take a photo of themselves in front of the station's sign along with the waste they brought.
 3. They upload the photo to a mobile app or web platform powered by ICP.
-4. They receive 1,000 DIP20 tokens in their balance.
-5. On the project's partner offers page, users can purchase three types of DIP721 NFTs, which grant discounts at partner stores.
+4. They receive 1,000 SPL20 tokens in their balance.
+5. On the project's partner offers page, users can purchase three types of NFTs, which grant discounts at partner stores.
 
 ## Expected Results
 
@@ -40,3 +40,4 @@ Anyone who brings waste to the "Ukraine Without Waste" station receives tokens, 
  - [Presentation link](https://docs.google.com/presentation/d/1HwgGLAqxJhjB4TFSljMQF67l3jtmz99O/edit?slide=id.p1#slide=id.p1)
  - [Demo on Youtube](https://www.youtube.com/watch?v=RbnHCaMm_x8)
  - [Deployed project on ICP](https://2dwgp-naaaa-aaaan-qzynq-cai.icp0.io/)
+ - [Repository with smart-contracts]()

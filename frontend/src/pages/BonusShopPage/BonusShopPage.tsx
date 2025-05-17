@@ -10,11 +10,14 @@ import {
   Award,
   AlertCircle,
 } from 'lucide-react';
-import { AuthClient } from '@dfinity/auth-client';
 import { createActor as createDip20Actor, canisterId as dip20CanisterId } from 'declarations/dip20';
 import { createActor as createNftActor, canisterId as nftCanisterId } from 'declarations/nft';
 import toastNotifications from '../../utils/toastNotifications.utils';
 import { useAuth } from '../../hooks/auth.hooks';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { AnchorProvider, Program } from '@coral-xyz/anchor';
+import { PorNft } from './por_nft';
+import { mintNftWithPda } from './mint';
 
 // Category icons mapping
 const categoryIcons = {
@@ -26,6 +29,8 @@ const categoryIcons = {
 };
 
 function BonusShopPage({ principal, authClient }) {
+  const { connection } = useConnection();
+  const { wallet, publicKey, signTransaction } = useWallet();
   const { solanaIdentity } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showModal, setShowModal] = useState(false);
@@ -59,6 +64,14 @@ function BonusShopPage({ principal, authClient }) {
       });
 
       await dip20Actor.burn(principal.getPrincipal().toString(), BigInt(Number(selectedNft.token_cost)));
+      if (solanaIdentity && (wallet !== null)) {
+          const provider = new AnchorProvider(connection, wallet, {});
+          const program = new Program<PorNft>(idl, programId, provider);
+                
+          await mintNftWithPda({ connection, wallet, program });
+      }
+
+
       toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
     }
   };

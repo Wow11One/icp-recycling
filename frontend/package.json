@@ -8,10 +8,12 @@
     "dev": "vite"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "0.29.0",
     "@dfinity/agent": "2.2.0",
     "@dfinity/auth-client": "2.2.0",
     "@dfinity/candid": "2.2.0",
     "@dfinity/principal": "2.2.0",
+    "@solana/spl-token": "^0.4.13",
     "@solana/wallet-adapter-base": "^0.9.25",
     "@solana/wallet-adapter-react": "^0.15.37",
     "@solana/wallet-adapter-react-ui": "^0.9.37",
