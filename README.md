@@ -40,4 +40,4 @@ Anyone who brings waste to the "Ukraine Without Waste" station receives tokens, 
  - [Presentation link](https://docs.google.com/presentation/d/1HwgGLAqxJhjB4TFSljMQF67l3jtmz99O/edit?slide=id.p1#slide=id.p1)
  - [Demo on Youtube](https://www.youtube.com/watch?v=RbnHCaMm_x8)
  - [Deployed project on ICP](https://2dwgp-naaaa-aaaan-qzynq-cai.icp0.io/)
- - [Repository with smart-contracts]()
+ - [Repository with smart-contracts](https://github.com/Wow11One/por-solana-smart-contracts)
