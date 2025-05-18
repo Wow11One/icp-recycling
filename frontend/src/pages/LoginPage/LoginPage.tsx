@@ -78,9 +78,9 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
   }, []);
 
   return (
-    <div className='min-h-screen bg-green-50 flex flex-col'>
+    <div className='min-h-screen bg-green-50 p-4 py-10 w-full'>
       {/* Main Content */}
-      <main className='flex-1 flex items-center justify-center p-4 my-10'>
+      <main className='flex-1 flex items-center justify-center w-full'>
         <div className='max-w-md w-full bg-white rounded-lg shadow-md overflow-hidden'>
           <div className='p-8'>
             <div className='text-center mb-8'>
@@ -159,30 +159,15 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
 
             {wallet.publicKey && (
               <button
-                className='my-5 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium primary-button'
+                className='my-5 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium primary-button disabled:cursor-not-allowed'
                 disabled={loginStatus === 'logging-in'}
                 onClick={() => {
                   loginWithSolana()
                   .then(async (delegetaionIdentity) => {
-                    console.log('delegetaionIdentity', delegetaionIdentity);
-                    // const authClient = await AuthClient.create();
-                    // const identity = delegetaionIdentity;
-                    // const actor = createActor(canisterId, {
-                    //   agentOptions: {
-                    //     identity,
-                    //   },
-                    // });
-                    // const isAuthenticated = await authClient.isAuthenticated();
-
-                    // console.log('isAuthenticated', isAuthenticated);
-                    // setActor(actor);
-                    // setAuthClient(authClient);
-                    // setIsAuthenticated(isAuthenticated);
-                    // setPrincipal(identity);
                     setSolanaIdentity(delegetaionIdentity as any);
-                    navigate(ApplicationRoutes.Profile);
-
-                    //setPrincipal(delegetaionIdentity);
+                    updateActor().then(() => {
+                      navigate(ApplicationRoutes.Profile);
+                    });
                   })
                   .catch((e) => {
                     toastNotifications.error(e.message || 'unexpected error occurred while signing in with solana')

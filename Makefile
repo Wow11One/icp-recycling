@@ -9,11 +9,15 @@ deploy-provider:
 	        salt = \"salt\"; \
           	chain_id = opt \"devnet\"; \
 	        scheme = opt \"http\"; \
-	        statement = opt \"Login to the ICP app\"; \
+	        statement = opt \"Login to the Proof of recycling app\"; \
 	        sign_in_expires_in = opt 900000000000; /* 5 minutes */ \
 	        session_expires_in = opt 604800000000000; /* 1 week */ \
 	        targets = opt vec { \
 	            \"$$(dfx canister id ic_siws_provider)\"; \
+				\"$$(dfx canister id backend)\"; \
+				\"$$(dfx canister id dip20)\"; \
+				\"$$(dfx canister id nft)\"; \
+				\"$$(dfx canister id storage)\"; \
 	        }; \
           runtime_features = null; \
 	    } \
@@ -67,8 +71,9 @@ deploy-backend:
 	dfx deploy nft
 	dfx deploy storage
 	dfx deploy internet_identity
+	make deploy-provider
 
-deploy-all: create-canisters deploy-provider deploy-frontend deploy-backend
+deploy-all: create-canisters deploy-backend deploy-frontend
 
 run-frontend:
 	npm install

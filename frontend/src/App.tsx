@@ -15,25 +15,21 @@ import SiwsProvider from './providers/SiwsProvider';
 import { Buffer } from 'buffer';
 import NftMintingPage from './pages/NftMintingPage';
 
-window.Buffer = window.Buffer || Buffer;
 const App: FC = () => {
+  window.Buffer = window.Buffer || Buffer;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isFetchingAuthentication, setIsFetchingAuthentication] = useState(true);
   const [totalSupply, setTotalSupply] = useState('');
   const [actor, setActor] = useState();
   const [tokenCreated, setTokenCreated] = useState(false);
-  const [decimals, setDecimals] = useState(0n);
   const [principal, setPrincipal] = useState();
   const [authClient, setAuthClient] = useState();
-
-  console.log('principal', principal);
 
   const updateSupply = async () => {
     try {
       const supply = await actor.icrc1_total_supply();
       const decimals = BigInt(await actor.icrc1_decimals());
       setTotalSupply(`${Number(supply) / Number(10n ** decimals)}`);
-      setDecimals(decimals);
     } catch (error) {
       console.error('Error fetching total supply:', error);
     }

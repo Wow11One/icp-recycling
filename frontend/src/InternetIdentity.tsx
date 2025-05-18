@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor, canisterId } from 'declarations/backend';
 import { ApplicationRoutes } from './utils/constants';
 import { Link } from 'react-router-dom';
-import { useAuth } from './hooks/auth.hooks';
+import { useSiws } from 'ic-siws-js/react';
 
-const network = process.env.DFX_NETWORK;
 
 const InternetIdentity = ({
   setActor,
@@ -15,7 +14,8 @@ const InternetIdentity = ({
   authClient,
   setAuthClient,
 }) => {
-  const { solanaIdentity, setSolanaIdentity } = useAuth();
+  const { identity: solanaIdentity, clear } = useSiws();
+  //const { solanaIdentity, setSolanaIdentity } = useAuth();
   const [principal, setPrincipal] = useState();
   useEffect(() => {
     updateActor();
@@ -41,7 +41,7 @@ const InternetIdentity = ({
 
   async function logout() {
     await authClient.logout();
-    setSolanaIdentity(null);
+    clear();
     updateActor();
   }
 

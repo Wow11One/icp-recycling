@@ -4,7 +4,6 @@ import {
   Transaction,
   Keypair,
   Connection,
-  sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -12,7 +11,7 @@ import {
   createInitializeMintInstruction,
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
-import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
 import { PorNft } from "./por_nft";
 import * as anchor from '@coral-xyz/anchor';
 
@@ -20,30 +19,27 @@ export const mintNftWithPda = async ({
   connection,
   wallet,
   program,
+  nftTitle,
+  nftUri,
 }: {
+  nftTitle: string,
+  nftUri: string,
   connection: Connection;
   wallet: anchor.Wallet;
   program: Program<PorNft>;
-}) => {
-  const testNftTitle = "POR NFT";
-  const testNftSymbol = "POR";
-  const testNftUri =
-    "https://64ecaegqumlgkazch64q5ekoqhgmxlskvblkxnoji7yoxcojrtja.arweave.net/9wggENCjFmUDIj-5DpFOgczLrkqoVqu1yUfw64nJjNI";
+}) => {console.log('wallet1', wallet)
+  const nftSymbol = "POR";
 
   const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
     "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
   );
 
-  // Generate new mint keypair
   const mintKeypair = Keypair.generate();
-
-  // Derive program authority PDA
+  console.log('wallet.payer2', wallet.payer)
   const [programAuthority] = await PublicKey.findProgramAddress(
     [Buffer.from("mint-authority")],
     program.programId
   );
-
-  // Create and initialize mint
   const lamports = await connection.getMinimumBalanceForRentExemption(82);
   const createMintTx = new Transaction().add(
     SystemProgram.createAccount({
@@ -60,19 +56,22 @@ export const mintNftWithPda = async ({
       programAuthority // freeze authority must not be null
     )
   );
+  
+  createMintTx.feePayer = wallet.publicKey;
+  createMintTx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+  createMintTx.partialSign(mintKeypair);
 
-  await sendAndConfirmTransaction(connection, createMintTx, [
-    wallet.payer,
-    mintKeypair,
-  ]);
+  const signedTxArray = await wallet.signAllTransactions([createMintTx]);
+  const signedTx = signedTxArray[0];
+  const txId = await connection.sendRawTransaction(signedTx.serialize());
+  await connection.confirmTransaction(txId, "confirmed");
+  console.log('mintKeypair3', mintKeypair)
 
-  // Derive token account for the user
   const tokenAccount = getAssociatedTokenAddressSync(
     mintKeypair.publicKey,
     wallet.publicKey
   );
 
-  // Derive metadata and edition PDAs
   const [metadata] = await PublicKey.findProgramAddress(
     [
       Buffer.from("metadata"),
@@ -91,10 +90,11 @@ export const mintNftWithPda = async ({
     ],
     TOKEN_METADATA_PROGRAM_ID
   );
+  console.log('wallet4', wallet)
 
   // Call mintNft instruction
   const tx = await program.methods
-    .mintNft(testNftTitle, testNftSymbol, testNftUri)
+    .mintNft(nftTitle, nftSymbol, nftUri)
     .accounts({
       mint: mintKeypair.publicKey,
       tokenAccount,
@@ -108,7 +108,7 @@ export const mintNftWithPda = async ({
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
     })
-    .signers([wallet.payer])
+    .signers([])
     .rpc();
 
   console.log("NFT minted in tx:", tx);

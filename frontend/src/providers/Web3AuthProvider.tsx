@@ -51,7 +51,7 @@ const Web3AuthProvider: FC<Web3AuthProviderProps> = ({ children }) => {
 
   return (
     <Web3AuthContext.Provider value={{ connectWallet }}>
-      <ConnectionProvider endpoint={'https://api.devnet.solana.com'}>
+      <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect>
           <WalletModalProvider>
             {state.isConnectWalletModalVisible && (

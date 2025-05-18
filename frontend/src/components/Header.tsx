@@ -23,7 +23,7 @@ const Header = ({
           </Link>
         </div>
 
-        <nav className='flex items-center gap-6'>
+        <nav className='flex items-center gap-6 overflow-hidden'>
           <Link
             to={ApplicationRoutes.RecyclingForm}
             className='text-sm font-medium text-gray-600 hover:text-green-600'
@@ -60,7 +60,6 @@ const Header = ({
         </nav>
 
         <div className='flex items-center gap-4'>
-          {actor && ''}
           <InternetIdentity
             setActor={setActor}
             isAuthenticated={isAuthenticated}

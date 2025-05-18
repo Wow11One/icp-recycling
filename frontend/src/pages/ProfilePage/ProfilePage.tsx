@@ -12,7 +12,6 @@ import {
   BarChart3,
   ShoppingBag,
 } from 'lucide-react';
-import React from 'react';
 import { ApplicationRoutes } from '../../utils/constants';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor as createDip20Actor, canisterId as dip20CanisterId } from 'declarations/dip20';
@@ -20,6 +19,7 @@ import {
   createActor as createStorageActor,
   canisterId as storageCanisterId,
 } from 'declarations/storage';
+import { useSiws } from 'ic-siws-js/react';
 
 const userData = {
   name: 'Alex Green',
@@ -34,55 +34,9 @@ const userData = {
   bio: 'Garbage collector',
 };
 
-const recentActivity = [
-  {
-    id: 'act-001',
-    type: 'recycling',
-    title: 'Plastic Bottles Recycled',
-    date: '2023-11-10',
-    points: 25,
-    location: 'Downtown Recycling Center',
-    image: '/placeholder.svg?height=60&width=60',
-  },
-  {
-    id: 'act-002',
-    type: 'nft',
-    title: "Redeemed 'Free Coffee' NFT",
-    date: '2023-11-05',
-    points: -75,
-    location: 'GreenBean Café',
-    image: '/placeholder.svg?height=60&width=60',
-  },
-  {
-    id: 'act-003',
-    type: 'recycling',
-    title: 'E-Waste Recycling',
-    date: '2023-10-28',
-    points: 50,
-    location: 'Tech Recycling Hub',
-    image: '/placeholder.svg?height=60&width=60',
-  },
-  {
-    id: 'act-004',
-    type: 'nft',
-    title: "Purchased 'Plant a Tree' NFT",
-    date: '2023-10-15',
-    points: -150,
-    location: 'Bonus Shop',
-    image: '/placeholder.svg?height=60&width=60',
-  },
-  {
-    id: 'act-005',
-    type: 'recycling',
-    title: 'Paper Recycling',
-    date: '2023-10-10',
-    points: 15,
-    location: 'Community Center',
-    image: '/placeholder.svg?height=60&width=60',
-  },
-];
 
 function ProfilePage({ principal, authClient }) {
+  const { identity: solanaIdentity } = useSiws();
   const [activeTab, setActiveTab] = useState('activity');
   const [actor, setActor] = useState();
   const [porBalance, setPorBalance] = useState(0);
@@ -149,7 +103,10 @@ function ProfilePage({ principal, authClient }) {
                 </div>
                 <div className='flex-1'>
                   <h1 className='text-lg pt-12 font-bold text-green-800'>
-                    @{principal.getPrincipal().toString()}
+                    @
+                    {solanaIdentity
+                      ? solanaIdentity.getPrincipal().toString()
+                      : principal.getPrincipal().toString()}
                   </h1>
                 </div>
                 <div className='flex gap-2 mt-4 md:mt-0'>

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  Recycle,
-  ArrowLeft,
   Leaf,
   Gift,
   ShoppingBag,
@@ -16,8 +14,10 @@ import toastNotifications from '../../utils/toastNotifications.utils';
 import { useAuth } from '../../hooks/auth.hooks';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { AnchorProvider, Program } from '@coral-xyz/anchor';
-import { PorNft } from './por_nft';
+import { PorNft, IDL } from './por_nft';
 import { mintNftWithPda } from './mint';
+import { getFileUrl, uploadJsonToPinata } from '../../utils/pinata.utils';
+import { useSiws } from 'ic-siws-js/react';
 
 // Category icons mapping
 const categoryIcons = {
@@ -29,16 +29,16 @@ const categoryIcons = {
 };
 
 function BonusShopPage({ principal, authClient }) {
+  const { identity: solanaIdentity } = useSiws();
   const { connection } = useConnection();
-  const { wallet, publicKey, signTransaction } = useWallet();
-  const { solanaIdentity } = useAuth();
+  const wallet = useWallet();
+  //const { solanaIdentity } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showModal, setShowModal] = useState(false);
   const [selectedNft, setSelectedNft] = useState(null);
   const [porBalance, setPorBalance] = useState(0);
   const [nftBonuses, setNftBonuses] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
-
   const handleExchange = nft => {
     setSelectedNft(nft);
     setShowModal(true);
@@ -46,33 +46,57 @@ function BonusShopPage({ principal, authClient }) {
 
   const confirmExchange = async () => {
     if (selectedNft && porBalance >= Number(selectedNft.token_cost)) {
-      setPorBalance(prev => prev - Number(selectedNft.token_cost));
-      setShowModal(false);
-      const nfts = JSON.parse(localStorage.getItem('my-nfts') || '[]');
-      console.log(selectedNft);
-      nfts.push({
-        ...selectedNft,
-        token_cost: Number(selectedNft.token_cost),
-        id: Number(selectedNft.id),
-      });
-      localStorage.setItem('my-nfts', JSON.stringify(nfts));
-      const identity = solanaIdentity || authClient.getIdentity();
-      const dip20Actor = createDip20Actor(dip20CanisterId, {
-        agentOptions: {
-          identity,
-        },
-      });
+      try {
+        setPorBalance(prev => prev - Number(selectedNft.token_cost));
+        setShowModal(false);
+        const nfts = JSON.parse(localStorage.getItem('my-nfts') || '[]');
+        console.log(selectedNft);
+        nfts.push({
+          ...selectedNft,
+          token_cost: Number(selectedNft.token_cost),
+          id: Number(selectedNft.id),
+        });
+        localStorage.setItem('my-nfts', JSON.stringify(nfts));
 
-      await dip20Actor.burn(principal.getPrincipal().toString(), BigInt(Number(selectedNft.token_cost)));
-      if (solanaIdentity && (wallet !== null)) {
+        // solana logic
+        if (solanaIdentity && wallet !== null) {
+          console.log('salana', process.env.SOLANA_NFT_CONTRACT_ADDRESS);
           const provider = new AnchorProvider(connection, wallet, {});
-          const program = new Program<PorNft>(idl, programId, provider);
-                
-          await mintNftWithPda({ connection, wallet, program });
+          const program = new Program<PorNft>(
+            IDL,
+            //process.env.SOLANA_NFT_CONTRACT_ADDRESS!,
+            '4jwVxfKwLtXhAkPxpWuiZMHB5deB4U7At6mkCrZUGonX',
+            provider,
+          );
+          const uriIc = await uploadJsonToPinata({
+            name: selectedNft.title,
+            description: selectedNft.description,
+            image: selectedNft.image,
+            attributes: [
+              { trait_type: 'createdAt', value: new Date().getTime() },
+              { trait_type: 'category', value: selectedNft.category },
+              { trait_type: 'tokenCost', value: Number(selectedNft.token_cost)  },
+              { trait_type: 'discountSize', value: Number(selectedNft.discount_size) },
+            ],
+          });console.log('program after')
+          
+          await mintNftWithPda({ nftTitle: selectedNft.title, nftUri: getFileUrl(uriIc), connection, wallet, program });
+          // icp logic
+        } else {
+          const identity = authClient.getIdentity();
+          const dip20Actor = createDip20Actor(dip20CanisterId, {
+            agentOptions: {
+              identity,
+            },
+          });
+          //await dip20Actor.burn(principal.getPrincipal().toString(), BigInt(Number(selectedNft.token_cost)));
+        }
+
+        toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
+      } catch (err: any) {
+        console.error(err.message)
+        toastNotifications.error(`Error occured while minting "${selectedNft.title}" NFT: ${err.message}!`);
       }
-
-
-      toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
     }
   };
 
@@ -91,7 +115,7 @@ function BonusShopPage({ principal, authClient }) {
         },
       });
 
-      const balance = await dip20Actor.balance_of(principal.getPrincipal().toString());
+      const balance = await dip20Actor.balance_of(identity.getPrincipal().toString());
       setPorBalance(Number(balance));
 
       const nfts = await nftActor.get_template_nfts();
