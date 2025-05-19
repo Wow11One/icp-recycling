@@ -1,0 +1,10 @@
+type RecycleDataWithoutImage = record {
+  comment : text;
+  principal_id : text;
+  location : text;
+};
+service : {
+  get_all_recycle_data : () -> (vec RecycleDataWithoutImage) query;
+  get_recycle_data : (text) -> (vec RecycleDataWithoutImage) query;
+  store_data : (blob, text, text) -> (text);
+}

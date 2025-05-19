@@ -1,0 +1,17 @@
+type NFT = record {
+  id : nat64;
+  title : text;
+  owner : text;
+  discount_size : nat8;
+  description : text;
+  category : text;
+  image : text;
+  token_cost : nat64;
+};
+type Result = variant { Ok; Err : text };
+service : () -> {
+  get_template_nfts_helper : () -> (vec NFT) query;
+  get_user_nfts : (text) -> (vec NFT) query;
+  mint_nft : (text, nat64, nat64) -> (Result);
+  redeem_nft : (text, nat64) -> (Result);
+}
