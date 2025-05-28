@@ -5,7 +5,7 @@ export interface Metadata {
   attributes?: { trait_type: string; value: string | number }[];
 }
 
-const PINATA_API_KEY = process.env.PINATA_API_KEY;
+const PINATA_API_KEY = '70a46fc6f97845278456';
 const PINATA_SECRET_API_KEY = process.env.PINATA_API_SECRET;
 
 export const uploadFileToPinata = async (file: File): Promise<string> => {
@@ -36,9 +36,8 @@ export const uploadJsonToPinata = async (metadata: Metadata): Promise<string> =>
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      //pinata_api_key: PINATA_API_KEY,
-      pinata_api_key: '70a46fc6f97845278456',
-      pinata_secret_api_key: '7261220db36cf663ec44946898dbd99d5f5c5b0556bfe28521d83c9f182ab2ff',
+      pinata_api_key: PINATA_API_KEY,
+      pinata_secret_api_key: PINATA_SECRET_API_KEY!,
     },
     body: JSON.stringify(metadata),
   });

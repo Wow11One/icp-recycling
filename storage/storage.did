@@ -1,10 +1,37 @@
+type Brand = record {
+  id : text;
+  created_at : nat;
+  comment : text;
+  image : text;
+  principal_id : text;
+  employees_ids : vec text;
+  location : text;
+};
 type RecycleDataWithoutImage = record {
   comment : text;
   principal_id : text;
   location : text;
 };
-service : {
+type Result = variant { Ok; Err : text };
+type Result_1 = variant { Ok : text; Err : text };
+type Result_2 = variant { Ok : User; Err : text };
+type User = record {
+  name : text;
+  description : text;
+  created_at : nat;
+  image : text;
+  principal_id : text;
+  location : text;
+};
+service : () -> {
+  create_brand : (Brand) -> (Result);
+  create_or_get_user : (text) -> (User);
   get_all_recycle_data : () -> (vec RecycleDataWithoutImage) query;
+  get_brand_with_employees : (text) -> (opt record { Brand; vec User }) query;
+  get_brands_by_principal : (text) -> (vec Brand) query;
   get_recycle_data : (text) -> (vec RecycleDataWithoutImage) query;
-  store_data : (blob, text, text) -> (text);
+  get_user : (text) -> (opt User) query;
+  store_data : (blob, text, text, nat) -> (Result_1);
+  update_user : (text, text, text, text) -> (Result_2);
+  user_works_for_brand : (text, text) -> (bool) query;
 }

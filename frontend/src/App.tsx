@@ -113,42 +113,6 @@ const App: FC = () => {
                   element={<ProfilePage authClient={authClient} principal={principal} />}
                 />
               </Route>
-
-              {/* <div className='min-h-screen bg-gray-100'>
-        <Header
-          actor={actor}
-          setActor={setActor}
-          isAuthenticated={isAuthenticated}
-          setIsAuthenticated={setIsAuthenticated}
-          tokenCreated={tokenCreated}
-          setTokenCreated={setTokenCreated}
-        />
-        {tokenCreated ? (
-          <div>
-            <TokenInfo totalSupply={totalSupply} />
-            <div className='mx-auto'>
-              {isAuthenticated ? (
-                <div className='grid grid-cols-1 gap-8 px-4 md:grid-cols-4 lg:grid-cols-3'>
-                  <BalanceChecker decimals={decimals} />
-                  <TokenSender actor={actor} updateSupply={updateSupply} decimals={decimals} />
-                  <ApproveSpender actor={actor} decimals={decimals} />
-                  <TransferFrom actor={actor} decimals={decimals} />
-                </div>
-              ) : (
-                <AuthWarning />
-              )}
-            </div>
-          </div>
-        ) : (
-          <div>
-            {isAuthenticated ? (
-              <CreateToken actor={actor} setTokenCreated={setTokenCreated} />
-            ) : (
-              <AuthWarning />
-            )}
-          </div>
-        )}
-      </div> */}
             </Route>
           </Routes>
         </BrowserRouter>

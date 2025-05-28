@@ -48,12 +48,12 @@ function BonusShopPage({ principal, authClient }) {
     if (selectedNft && porBalance >= Number(selectedNft.token_cost)) {
       try {
         setPorBalance(prev => prev - Number(selectedNft.token_cost));
-        setShowModal(false);
         const nfts = JSON.parse(localStorage.getItem('my-nfts') || '[]');
         console.log(selectedNft);
         nfts.push({
           ...selectedNft,
           token_cost: Number(selectedNft.token_cost),
+          created_at: Number(selectedNft.created_at),
           id: Number(selectedNft.id),
         });
         localStorage.setItem('my-nfts', JSON.stringify(nfts));
@@ -73,6 +73,7 @@ function BonusShopPage({ principal, authClient }) {
             description: selectedNft.description,
             image: selectedNft.image,
             attributes: [
+              { trait_type: 'active', value: false },
               { trait_type: 'createdAt', value: new Date().getTime() },
               { trait_type: 'category', value: selectedNft.category },
               { trait_type: 'tokenCost', value: Number(selectedNft.token_cost)  },
@@ -93,10 +94,13 @@ function BonusShopPage({ principal, authClient }) {
         }
 
         toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
-      } catch (err: any) {
-        console.error(err.message)
-        toastNotifications.error(`Error occured while minting "${selectedNft.title}" NFT: ${err.message}!`);
-      }
+        
+       } catch (err: any) {
+         console.error(err.message)
+         toastNotifications.error(`Error occured while minting "${selectedNft.title}" NFT: ${err.message}!`);
+       } finally {
+        setShowModal(false);
+       }
     }
   };
 
@@ -106,19 +110,19 @@ function BonusShopPage({ principal, authClient }) {
       const identity = authClient.getIdentity();
       const dip20Actor = createDip20Actor(dip20CanisterId, {
         agentOptions: {
-          identity,
+          identity: solanaIdentity || identity,
         },
       });
       const nftActor = createNftActor(nftCanisterId, {
         agentOptions: {
-          identity,
+          identity: solanaIdentity || identity,
         },
       });
 
       const balance = await dip20Actor.balance_of(identity.getPrincipal().toString());
       setPorBalance(Number(balance));
 
-      const nfts = await nftActor.get_template_nfts();
+      const nfts = await nftActor.get_template_nfts_helper();
       console.log(nfts);
 
       setNftBonuses(nfts);
@@ -219,7 +223,7 @@ function BonusShopPage({ principal, authClient }) {
 
           {isFetching && (
             <div className='h-full w-full flex justify-center items-center'>
-              <div className='animate-spin size-10 border-4 mb-36 border-green-500  border-t-transparent rounded-full' />
+              <div className='animate-spin size-10 border-4 my-18 border-green-500  border-t-transparent rounded-full' />
             </div>
           )}
 

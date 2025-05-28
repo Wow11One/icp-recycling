@@ -18,7 +18,7 @@ struct NFT {
     discount_size: u8,
     owner: Owner,
     business_id: String,
-    created_at: u32,
+    created_at: u128,
 }
 
 static mut NFTS: Option<HashMap<u64, NFT>> = None;
@@ -30,7 +30,7 @@ fn init() {
     unsafe {
         NFTS = Some(HashMap::new());
         OWNERSHIP = Some(HashMap::new());
-        NFTS_TEMPLATES = Some(get_template_nfts_helper());  
+        NFTS_TEMPLATES = Some(get_template_nfts_helper().clone());  
     }
 }
 
@@ -116,6 +116,16 @@ fn add_nft_template(new_template: NFT) -> Result<(), String> {
 // }
 
 #[query]
+fn get_template_nfts() -> Vec<NFT> {
+    unsafe {
+        match &NFTS_TEMPLATES {
+            Some(templates) => templates.clone(), // clone the Vec<NFT>
+            None => vec![], // return empty if not initialized
+        }
+    }
+}
+
+#[query]
 fn get_template_nfts_helper() -> Vec<NFT> {
     vec![
         NFT {
@@ -183,7 +193,7 @@ fn get_template_nfts_helper() -> Vec<NFT> {
             title: "10% Off for wall clock".to_string(),
             description: "10% off for best eco wall clock from 'Avrora'.".to_string(),
             token_cost: 10000,
-            image: "https://likor.pl/wp-content/uploads/2020/11/580_310_fitoal.jpg".to_string(),
+            image: "https://cdn.faire.com/fastly/88403576bca9028b9acc1ce545b6685bbc2c2b1e3dfc7a77a50ba3741a71d29c.jpeg?bg-color=FFFFFF&dpr=1&fit=crop&format=jpg&height=720&width=720".to_string(),
             category: "Present".to_string(),
             discount_size: 10,
             owner: "".to_string(),

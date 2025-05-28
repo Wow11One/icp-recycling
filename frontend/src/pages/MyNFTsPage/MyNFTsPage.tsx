@@ -102,7 +102,7 @@ function MyNftsPage() {
   const [filter, setFilter] = useState('all'); // all, unused, used
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNft, setSelectedNft] = useState(null);
-  const [showQrCode, setShowQrCode] = useState(false);
+  const [showQrCode, setShowQrCode] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
 
   // Filter NFTs based on status and search query
@@ -117,7 +117,7 @@ function MyNftsPage() {
   // Handle NFT selection for detailed view
   const handleNftSelect = nft => {
     setSelectedNft(nft);
-    setShowQrCode(false);
+    setShowQrCode(true);
     setCopiedCode(false);
   };
 
@@ -345,12 +345,12 @@ function MyNftsPage() {
                               : 'bg-gray-100 text-gray-800'
                           }`}
                         >
-                          {selectedNft.status !== 'unused' ? (
+                          {selectedNft.status === 'unused' ? (
                             <CheckCircle className='h-3.5 w-3.5' />
                           ) : (
                             <Clock className='h-3.5 w-3.5' />
                           )}
-                          {selectedNft.status !== 'unused' ? 'Available' : 'Used'}
+                          {selectedNft.status === 'unused' ? 'Available' : 'Used'}
                         </div>
                       </div>
 
@@ -378,15 +378,15 @@ function MyNftsPage() {
                           <span className='text-gray-500'>Expires:</span>
                           <span className='font-medium'>{formatDate(selectedNft.expiryDate)}</span>
                         </div>
-                        {selectedNft.status === 'used' && (
+                        {selectedNft.status !== 'used' && (
                           <div className='flex justify-between'>
                             <span className='text-gray-500'>Used on:</span>
-                            <span className='font-medium'>{formatDate(selectedNft.usedDate)}</span>
+                            <span className='font-medium'>{formatDate(new Date())}</span>
                           </div>
                         )}
                         <div className='flex justify-between'>
                           <span className='text-gray-500'>Token Cost:</span>
-                          <span className='font-medium'>{selectedNft.tokenCost} Tokens</span>
+                          <span className='font-medium'>{selectedNft.token_cost} Tokens</span>
                         </div>
                       </div>
                     </div>
@@ -401,20 +401,17 @@ function MyNftsPage() {
                               <div className='text-center'>
                                 <div className='bg-white p-4 inline-block rounded-lg border border-gray-200 mb-2'>
                                   {/* This would be a real QR code in production */}
-                                  <div className='w-48 h-48 mx-auto bg-gray-200 flex items-center justify-center'>
-                                    {/* <QrCode className='h-24 w-24 text-gray-400' /> */}
-                                    <QRCodeSVG value={`${window.location.href}`} className='h-full w-full text-gray-400' />
+                                  <div className='w-48 h-48 mx-auto flex items-center justify-center'>
+                                    <QrCode className='h-24 w-24 text-gray-400' />
+                                    {/* <QRCodeSVG value={`${window.location.href}`} className='h-full w-full text-gray-400' /> */}
                                   </div>
                                 </div>
-                                <p className='text-sm text-gray-600'>
+                                {/* <p className='text-sm text-gray-600'>
                                   Show this QR code to the cashier to redeem your reward
+                                </p> */}
+                                <p className='text-sm text-gray-600'>
+                                  The discount was already used
                                 </p>
-                                <button
-                                  onClick={() => setShowQrCode(false)}
-                                  className='mt-4 text-green-600 hover:text-green-700 font-medium text-sm'
-                                >
-                                  Show redemption code instead
-                                </button>
                               </div>
                             ) : (
                               <div>
@@ -447,13 +444,13 @@ function MyNftsPage() {
                             )}
                           </div>
 
-                          <div className='space-y-4 mt-auto'>
-                            <button
+                          <div className='space-y-4'>
+                            {/* <button
                               onClick={handleUseNft}
                               className='w-full py-3 px-4 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition-colors'
                             >
                               Mark as Used
-                            </button>
+                            </button> */}
 
                             <div className='text-center'>
                               <a

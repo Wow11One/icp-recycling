@@ -11,7 +11,7 @@ import { Actor, HttpAgent } from '@dfinity/agent';
 import { AuthClient } from '@dfinity/auth-client';
 import imageCompression from 'browser-image-compression';
 
-const RecyclingForm = ({ principal }) => {
+const RecyclingForm = () => {
   const [formData, setFormData] = useState({
     location: '',
     comment: '',
@@ -76,7 +76,7 @@ const RecyclingForm = ({ principal }) => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError);
     } else {
-      alert('Geolocation is not supported by your browser.');
+      toastNotifications.error('Geolocation is not supported by your browser.');
     }
   };
 
@@ -100,7 +100,7 @@ const RecyclingForm = ({ principal }) => {
       useWebWorker: true,
     };
 
-    try {
+    //try {
       setIsSubmitting(true);
       const compressedFile = await imageCompression(photo, options);
       const arrayBuffer = await compressedFile.arrayBuffer();
@@ -117,10 +117,9 @@ const RecyclingForm = ({ principal }) => {
           identity,
         },
       });
-
-      await storageActor.store_data(byteArray, formData.comment, formData.location);
-      const mintRes = await dip20Actor.mint(principal.getPrincipal().toString(), BigInt(1000));
-      console.log(mintRes);
+      console.log(byteArray, formData.comment, formData.location, new Date().getTime())
+      await storageActor.store_data(byteArray, formData.comment, formData.location, new Date().getTime());
+      const mintRes = await dip20Actor.mint(identity.getPrincipal().toString(), BigInt(1000));
 
       toastNotifications.success('Recycling data stored successfully!');
       setPhotoPreview(null);
@@ -129,12 +128,13 @@ const RecyclingForm = ({ principal }) => {
         location: '',
         comment: '',
       });
-    } catch (error) {
-      console.log('error', error);
-      toastNotifications.error('Failed to store data');
-    } finally {
-      setIsSubmitting(false);
-    }
+      setSubmitSuccess(true);
+    // catch (error) {
+    // console.log('error', error);
+    // toastNotifications.error('Failed to store data');
+    // finally {
+    // setIsSubmitting(false);
+    //
   };
 
   return (
@@ -146,6 +146,7 @@ const RecyclingForm = ({ principal }) => {
 
       {submitSuccess ? (
         <div className='bg-green-50 border border-green-200 rounded-lg p-4 text-center'>
+
           <p className='text-green-800 font-medium'>Thank you for your submission!</p>
           <p className='text-green-600'>Your recycling proof has been received.</p>
         </div>

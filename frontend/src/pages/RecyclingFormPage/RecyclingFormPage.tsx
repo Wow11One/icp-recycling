@@ -1,7 +1,7 @@
 import RecyclingForm from './RecyclingForm';
 import { useEffect } from 'react';
 
-export default function RecyclingFormPage({ principal }) {
+export default function RecyclingFormPage() {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, []);
@@ -18,7 +18,7 @@ export default function RecyclingFormPage({ principal }) {
             with the location and any comments you'd like to share.
           </p>
 
-          <RecyclingForm principal={principal} />
+          <RecyclingForm />
         </div>
       </main>
     </div>
