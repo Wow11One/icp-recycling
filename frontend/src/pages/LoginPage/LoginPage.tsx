@@ -132,26 +132,6 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
               )}
             </button>
 
-            {/* <button
-              onClick={login}
-              disabled={isConnectingIdentity}
-              className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium secondary-button ${
-                isConnectingIdentity ? 'cursor-not-allowed' : ''
-              }`}
-            >
-              {isConnectingSolanaWallet ? (
-                <>
-                  <div className='animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full'></div>
-                  Connecting...
-                </>
-              ) : (
-                <>
-                  <img src='/solana-sol-icon.png' className='w-5 h-5' />
-                  Connect Solana Wallet
-                </>
-              )}
-            </button> */}
-
             <WalletMultiButton>
               <img src='/solana-sol-icon.png' className='w-5 h-5' />
               Connect Solana Wallet
