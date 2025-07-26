@@ -131,33 +131,6 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
                 </>
               )}
             </button>
-
-            <WalletMultiButton>
-              <img src='/solana-sol-icon.png' className='w-5 h-5' />
-              Connect Solana Wallet
-            </WalletMultiButton>
-
-            {wallet.publicKey && (
-              <button
-                className='my-5 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium primary-button disabled:cursor-not-allowed'
-                disabled={loginStatus === 'logging-in'}
-                onClick={() => {
-                  loginWithSolana()
-                  .then(async (delegetaionIdentity) => {
-                    setSolanaIdentity(delegetaionIdentity as any);
-                    updateActor().then(() => {
-                      navigate(ApplicationRoutes.Profile);
-                    });
-                  })
-                  .catch((e) => {
-                    console.error(e)
-                    toastNotifications.error(e.message || 'unexpected error occurred while signing in with solana')
-                  });
-                }}
-              >
-                {loginStatus === 'logging-in' ? 'Signing in…' : 'Sign in with Solana'}
-              </button>
-            )}
             <div className='mt-6 bg-green-50 rounded-md p-4 text-sm'>
               <div className='flex items-start gap-3'>
                 <Info className='h-5 w-5 text-green-600 flex-shrink-0 mt-0.5' />

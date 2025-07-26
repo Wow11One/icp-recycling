@@ -12,6 +12,7 @@
   "dependencies": {
     "@coral-xyz/anchor": "0.29.0",
     "@solana/web3.js": "^1.98.2",
-    "lucide-react": "^0.485.0"
+    "lucide-react": "^0.485.0",
+    "react-apexcharts": "^1.7.0"
   }
 }

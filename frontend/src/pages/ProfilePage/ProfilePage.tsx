@@ -25,7 +25,7 @@ import {
   canisterId as storageCanisterId,
 } from 'declarations/storage';
 import { useSiws } from 'ic-siws-js/react';
-// import Chart from 'react-apexcharts';
+import Chart from 'react-apexcharts';
 import toastNotifications from '../../utils/toastNotifications.utils';
 import WheelComponent from '../../components/WheelComponent';
 
@@ -626,13 +626,13 @@ const ProfilePage = () => {
                             Recycling Activity (Last 7 Days)
                           </h3>
                           <div className='h-64 w-full'>
-                            {/* <Chart
+                            <Chart
                               options={chartOptions}
                               series={chartSeries}
                               type='bar'
                               height='100%'
                               width='100%'
-                            /> */}
+                            />
                           </div>
                         </div>
 
