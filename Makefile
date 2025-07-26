@@ -90,7 +90,6 @@ deploy-backend:
 	dfx deploy nft
 	dfx deploy storage
 	dfx deploy internet_identity
-	make deploy-provider
 
 deploy-all: create-canisters deploy-backend deploy-frontend
 
