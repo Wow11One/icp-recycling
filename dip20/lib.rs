@@ -3,7 +3,6 @@ use ic_cdk_macros::{init, query};
 use std::collections::HashMap;
 use candid::{CandidType, Deserialize};
 
-// Type alias for Account ID
 type AccountId = String;
 
 #[derive(CandidType, Deserialize, Clone)]

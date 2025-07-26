@@ -10,12 +10,16 @@ type NFT = record {
   image : text;
   token_cost : nat64;
 };
+type OwnedNft = record { nft : NFT; ownership : Ownership };
+type Ownership = record { nft_id : text; used_at : opt nat; minted_at : nat };
 type Result = variant { Ok; Err : text };
 service : () -> {
   add_nft_template : (NFT) -> (Result);
+  get_all_ownerships : () -> (vec Ownership) query;
   get_template_nfts : () -> (vec NFT) query;
   get_template_nfts_helper : () -> (vec NFT) query;
-  get_user_nfts : (text) -> (vec NFT) query;
-  mint_nft : (text, nat64, nat64) -> (Result);
-  redeem_nft : (text, nat64) -> (Result);
+  get_user_nfts : (text) -> (vec OwnedNft) query;
+  init_mannual : () -> ();
+  mint_nft : (text, text, nat) -> (Result);
+  use_nft : (text, nat, text) -> (Result);
 }

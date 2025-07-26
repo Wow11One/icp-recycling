@@ -48,6 +48,46 @@ const RecyclingForm = () => {
     setPhotoPreview(null);
   };
 
+  const handleGeminiCheck = async () => {
+    const base64Content = photoPreview?.split(",")[1]; // Remove "data:image/jpeg;base64,"
+
+    const payload = {
+      contents: [
+        {
+          parts: [
+            {
+              inline_data: {
+                mime_type: "image/jpeg",
+                data: base64Content,
+              },
+            },
+            {
+              text: `This picture was at location: ${formData.location} and has description: "${formData.comment}". Is it valida proof of recycle (there is a person on
+              photo who recycles)? Answer only "Yes" or "No". Answer "No" only if you 100% sure`,
+            },
+          ],
+        },
+      ],
+    };
+
+    const res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyC40r_wtGOGCwrP_nef62KTRFsOT3wIE3A",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await res.json();
+    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      return data.candidates[0].content.parts[0].text;
+    } else {
+      throw new Error("No answer or something went wrong.");
+    }
+  };
+  
+
   const getCityAndCountry = (lat, lon) => {console.log('process.env.OPENCAGE_GEO_API_URL', process.env.OPENCAGE_GEO_API_KEY)
     const apiKey = '8739517405194a86adfc82e0c169c068';
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&language=en`;
@@ -94,6 +134,14 @@ const RecyclingForm = () => {
     e.preventDefault();
     if (!photo) return;
 
+    const geminiCheck = await handleGeminiCheck();
+    if (geminiCheck === 'Yes') {
+      toastNotifications.info('Image is correctly validated with AI check')
+    } else {
+      toastNotifications.info('Image is not validated with AI check')
+      return;
+    }
+
     const options = {
       maxSizeMB: 1,
       maxWidthOrHeight: 1024,
@@ -119,7 +167,7 @@ const RecyclingForm = () => {
       });
       console.log(byteArray, formData.comment, formData.location, new Date().getTime())
       await storageActor.store_data(byteArray, formData.comment, formData.location, new Date().getTime());
-      const mintRes = await dip20Actor.mint(identity.getPrincipal().toString(), BigInt(1000));
+      await dip20Actor.mint(identity.getPrincipal().toString(), BigInt(1000));
 
       toastNotifications.success('Recycling data stored successfully!');
       setPhotoPreview(null);
@@ -219,7 +267,7 @@ const RecyclingForm = () => {
               onClick={() => getUserLocation()}
               className='text-xs cursor-pointer transition-all duration-300 hover:text-green-500 text-green-400 underline underline-offset-2 mt-3'
             >
-              Determine location automatically.
+              Determine location automatically
             </span>
           </div>
 

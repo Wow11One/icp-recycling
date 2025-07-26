@@ -14,6 +14,7 @@ import Web3AuthProvider from './providers/Web3AuthProvider';
 import SiwsProvider from './providers/SiwsProvider';
 import { Buffer } from 'buffer';
 import NftMintingPage from './pages/NftMintingPage';
+import ScanNftPage from './pages/ScanNftPage';
 
 const App: FC = () => {
   window.Buffer = window.Buffer || Buffer;
@@ -108,6 +109,7 @@ const App: FC = () => {
                   element={<BonusShopPage authClient={authClient} principal={principal} />}
                 />
                 <Route path={ApplicationRoutes.MyNFTsPage} element={<MyNFTsPage />} />
+                <Route path={ApplicationRoutes.ScanPage} element={<ScanNftPage />} />
                 <Route
                   path={ApplicationRoutes.Profile}
                   element={<ProfilePage authClient={authClient} principal={principal} />}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor, canisterId } from 'declarations/backend';
 import { ApplicationRoutes } from './utils/constants';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useSiws } from 'ic-siws-js/react';
 
 
@@ -14,6 +14,7 @@ const InternetIdentity = ({
   authClient,
   setAuthClient,
 }) => {
+  const navigate = useNavigate();
   const { identity: solanaIdentity, clear } = useSiws();
   //const { solanaIdentity, setSolanaIdentity } = useAuth();
   const [principal, setPrincipal] = useState();
@@ -43,6 +44,7 @@ const InternetIdentity = ({
     await authClient.logout();
     clear();
     updateActor();
+    navigate(ApplicationRoutes.LoginPage);
   }
 
   return (

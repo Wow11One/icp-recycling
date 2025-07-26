@@ -170,6 +170,7 @@ function LoginPage({ setActor, isAuthenticated, setIsAuthenticated, setPrincipal
                     });
                   })
                   .catch((e) => {
+                    console.error(e)
                     toastNotifications.error(e.message || 'unexpected error occurred while signing in with solana')
                   });
                 }}

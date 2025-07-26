@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, type ChangeEvent, type FormEvent } from "react"
 import { Link } from "react-router-dom"
 import {
@@ -12,18 +10,21 @@ import {
   Ticket,
   Award,
   Check,
-} from "lucide-react"
+} from "lucide-react";
+import { createActor as createNftActor, canisterId as nftCanisterId } from 'declarations/nft';
+import { AuthClient } from "@dfinity/auth-client";
+import toastNotifications from "../../utils/toastNotifications.utils";
+import { uploadFileToPinata, getFileUrl } from "../../utils/pinata.utils";
+import { generateImageWithDeepAI } from "../../utils/deepAi.utils";
 
-// NFT type options
 const nftTypes = [
-  { id: "discount", label: "Discount", icon: <ShoppingBag className="h-4 w-4" /> },
-  { id: "freebie", label: "Freebie", icon: <Coffee className="h-4 w-4" /> },
-  { id: "merchandise", label: "Merchandise", icon: <Gift className="h-4 w-4" /> },
-  { id: "impact", label: "Environmental Impact", icon: <Leaf className="h-4 w-4" /> },
-  { id: "experience", label: "Experience", icon: <Ticket className="h-4 w-4" /> },
+  { id: "Shop", label: "Shop", icon: <ShoppingBag className="h-4 w-4" /> },
+  { id: "Food/drinks", label: "Food/drinks", icon: <Coffee className="h-4 w-4" /> },
+  { id: "Present", label: "Present", icon: <Gift className="h-4 w-4" /> },
+  { id: "Environmental Impact", label: "Environmental Impact", icon: <Leaf className="h-4 w-4" /> },
+  { id: "Experiences", label: "Experiences", icon: <Ticket className="h-4 w-4" /> },
 ]
 
-// Discount size options
 const discountSizes = [
   { value: 3, label: "3% Discount" },
   { value: 5, label: "5% Discount" },
@@ -40,6 +41,7 @@ function NftMintingPage() {
     discountSize: 0,
   })
   const [image, setImage] = useState<File | null>(null)
+  const [aiImage, setAiImage] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
@@ -82,9 +84,21 @@ function NftMintingPage() {
     }
   }
 
+  const generateImageWithAi = async () => {
+    const prompt = `
+      Generate image based on name "${formData.name}" and description "${formData.description}"
+    `;
+    const imageUrl = await generateImageWithDeepAI(prompt);
+    setImagePreview(imageUrl);
+    setAiImage(imageUrl)
+
+    toastNotifications.info('AI image generated successfully!')
+  };
+
   const removeImage = () => {
     setImage(null)
     setImagePreview(null)
+    setAiImage('')
   }
 
   const validateForm = () => {
@@ -106,7 +120,7 @@ function NftMintingPage() {
       newErrors.discountSize = "Please select a discount size"
     }
 
-    if (!image) {
+    if (!image && !aiImage) {
       newErrors.image = "Please upload an image for your NFT"
     }
 
@@ -114,32 +128,60 @@ function NftMintingPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: FormEvent) => {
+    try {
+      e.preventDefault()
 
-    if (!validateForm()) {
-      return
-    }
+      if (!validateForm()) {
+        return
+      }
+      setIsSubmitting(true)
 
-    setIsSubmitting(true)
+      const authClient = await AuthClient.create();
+      const identity = authClient.getIdentity();
+      const actor = createNftActor(nftCanisterId, {
+        agentOptions: {
+          identity,
+        },
+      });
 
-    setTimeout(() => {
-      console.log("NFT Minting Form submitted:", { ...formData, image })
-      setIsSubmitting(false)
+      let imageUrl = aiImage;
+      if (image && !aiImage) {
+        const uriIc = await uploadFileToPinata(image);
+        imageUrl = getFileUrl(uriIc);
+      }
+
+      await actor.add_nft_template({
+        id: crypto.randomUUID(),
+        title: formData.name,
+        description: formData.description,
+        token_cost: 2500,
+        image: imageUrl,
+        category: formData.type,
+        discount_size: 3,
+        owner: identity.getPrincipal().toString(),
+        business_id: '',
+        created_at: new Date().getTime(),
+      });
+
+      toastNotifications.success("NFT template created successfully")
       setSubmitSuccess(true)
 
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          description: "",
-          type: "",
-          discountSize: 0,
-        })
-        setImage(null)
-        setImagePreview(null)
-        setSubmitSuccess(false)
-      }, 3000)
-    }, 1500)
+      setFormData({
+        name: "",
+        description: "",
+        type: "",
+        discountSize: 0,
+      })
+      setImage(null)
+      setImagePreview(null)
+      setSubmitSuccess(false)
+
+    } catch (err) {
+      toastNotifications.error(`Error occured while creating NFT template:${err.message}`)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -271,15 +313,14 @@ function NftMintingPage() {
                   </div>
                 )}
                 {errors.image && <p className='mt-1 text-sm text-red-500'>{errors.image}</p>}
+                  <span
+                    onClick={() => generateImageWithAi()}
+                    className='text-xs cursor-pointer transition-all duration-300 hover:text-green-500 text-green-400 underline underline-offset-2 mt-3'
+                  >
+                    Generate NFT image with Deep AI
+                  </span>
               </div>
 
-              <button
-                onClick={() => {}}
-                disabled={(!formData.description.length && !formData.description.length) || !!image}
-                className='primary-button mb-6 disabled:opacity-50 disabled:cursor-not-allowed'
-              >
-                Generate image with AI
-              </button>
 
               {/* NFT Type */}
               <div className='mb-6'>

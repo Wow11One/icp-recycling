@@ -7,4 +7,5 @@ export const ApplicationRoutes = {
     LoginPage: 'login',
     Profile: '/profile',
     NftMintPage: '/nft-mint-page',
+    ScanPage: '/scan-nft',
 };

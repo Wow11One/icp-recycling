@@ -43,6 +43,25 @@ deploy-provider-localnet:
 	)"
 	dfx generate ic_siws_provider
 
+deploy-provider-prod:
+	dfx deploy ic_siws_provider --network ic --identity vova --argument "( \
+	    record { \
+			domain = \"2dwgp-naaaa-aaaan-qzynq-cai.icp0.io\"; \
+	        uri = \"https://2dwgp-naaaa-aaaan-qzynq-cai.icp0.io"; \
+	        salt = \"salt\"; \
+          	chain_id = opt \"devnet\"; \
+	        scheme = opt \"https\"; \
+	        statement = opt \"Login to the ICP app\"; \
+	        sign_in_expires_in = opt 900000000000; /* 5 minutes */ \
+	        session_expires_in = opt 604800000000000; /* 1 week */ \
+	        targets = opt vec { \
+	            \"$$(dfx canister id ic_siws_provider)\"; \
+	        }; \
+          runtime_features = null; \
+	    } \
+	)"
+	dfx generate ic_siws_provider
+
 upgrade-provider:
 	dfx canister install ic_siws_provider --mode upgrade --upgrade-unchanged --argument "( \
 	    record { \

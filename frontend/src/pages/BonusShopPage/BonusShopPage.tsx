@@ -19,7 +19,6 @@ import { mintNftWithPda } from './mint';
 import { getFileUrl, uploadJsonToPinata } from '../../utils/pinata.utils';
 import { useSiws } from 'ic-siws-js/react';
 
-// Category icons mapping
 const categoryIcons = {
   ['Shop']: <ShoppingBag className='h-5 w-5' />,
   ['Food/drinks']: <Coffee className='h-5 w-5' />,
@@ -47,16 +46,16 @@ function BonusShopPage({ principal, authClient }) {
   const confirmExchange = async () => {
     if (selectedNft && porBalance >= Number(selectedNft.token_cost)) {
       try {
-        setPorBalance(prev => prev - Number(selectedNft.token_cost));
-        const nfts = JSON.parse(localStorage.getItem('my-nfts') || '[]');
-        console.log(selectedNft);
-        nfts.push({
-          ...selectedNft,
-          token_cost: Number(selectedNft.token_cost),
-          created_at: Number(selectedNft.created_at),
-          id: Number(selectedNft.id),
-        });
-        localStorage.setItem('my-nfts', JSON.stringify(nfts));
+        const now = new Date().getTime();
+        // const nfts = JSON.parse(localStorage.getItem('my-nfts') || '[]');
+        // console.log(selectedNft);
+        // nfts.push({
+        //   ...selectedNft,
+        //   token_cost: Number(selectedNft.token_cost),
+        //   created_at: Number(selectedNft.created_at),
+        //   id: Number(selectedNft.id),
+        // });
+        // localStorage.setItem('my-nfts', JSON.stringify(nfts));
 
         // solana logic
         if (solanaIdentity && wallet !== null) {
@@ -90,11 +89,17 @@ function BonusShopPage({ principal, authClient }) {
               identity,
             },
           });
-          //await dip20Actor.burn(principal.getPrincipal().toString(), BigInt(Number(selectedNft.token_cost)));
-        }
-
-        toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
         
+        await dip20Actor.burn(identity.getPrincipal().toString(), BigInt(Number(selectedNft.token_cost)));
+          const nftActor = createNftActor(nftCanisterId, {
+            agentOptions: {
+              identity,
+            },
+          });
+          await nftActor.mint_nft(identity.getPrincipal().toString(), selectedNft.id, now);
+        }
+        toastNotifications.success(`Successfully exchanged PoR for "${selectedNft.title}" NFT!`);
+        setPorBalance(prev => prev - Number(selectedNft.token_cost));
        } catch (err: any) {
          console.error(err.message)
          toastNotifications.error(`Error occured while minting "${selectedNft.title}" NFT: ${err.message}!`);
@@ -122,10 +127,14 @@ function BonusShopPage({ principal, authClient }) {
       const balance = await dip20Actor.balance_of(identity.getPrincipal().toString());
       setPorBalance(Number(balance));
 
-      const nfts = await nftActor.get_template_nfts_helper();
-      console.log(nfts);
+      if (!!localStorage.getItem('init')) {
+        await nftActor.init_mannual();
+      }
+      const userNfts = await nftActor.get_template_nfts();
+      const nftsDefault = await nftActor.get_template_nfts_helper();
+      console.log('userNfts', userNfts)
 
-      setNftBonuses(nfts);
+      setNftBonuses([...userNfts]);
     } catch (err) {
       console.log(err);
     }
@@ -237,6 +246,7 @@ function BonusShopPage({ principal, authClient }) {
                       selectedCategory === 'all' ||
                       bonus.category?.toLowerCase().includes(selectedCategory.toLowerCase()),
                   )
+                  .sort((a, b) => Number(b.created_at) - Number(a.created_at))
                   .map(nft => (
                     <div
                       key={nft.id}

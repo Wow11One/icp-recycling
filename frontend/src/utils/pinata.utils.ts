@@ -6,7 +6,7 @@ export interface Metadata {
 }
 
 const PINATA_API_KEY = '70a46fc6f97845278456';
-const PINATA_SECRET_API_KEY = process.env.PINATA_API_SECRET;
+const PINATA_SECRET_API_KEY = '7261220db36cf663ec44946898dbd99d5f5c5b0556bfe28521d83c9f182ab2ff';
 
 export const uploadFileToPinata = async (file: File): Promise<string> => {
   if (!file) throw new Error("No file provided");

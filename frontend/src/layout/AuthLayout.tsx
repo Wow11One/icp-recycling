@@ -14,6 +14,7 @@ const AuthLayout = ({ actor, isFetchingAuthentication }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
 
   const checkAuth = async () => {
+    console.log('solanaIdentity123', solanaIdentity)
     // authorized using icp
     setIsLoading(true);
     if (solanaIdentity) {

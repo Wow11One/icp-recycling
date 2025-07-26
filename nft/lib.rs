@@ -21,9 +21,22 @@ struct NFT {
     created_at: u128,
 }
 
+#[derive(CandidType, Deserialize, Clone)]
+struct Ownership {
+    nft_id: String,
+    minted_at: u128,
+    used_at: Option<u128>,
+}
+
+#[derive(CandidType, Deserialize, Clone)]
+struct OwnedNft {
+    nft: NFT,
+    ownership: Ownership,
+}
+
 static mut NFTS: Option<HashMap<u64, NFT>> = None;
 static mut NFTS_TEMPLATES: Option<Vec<NFT>> = None;
-static mut OWNERSHIP: Option<HashMap<Owner, Vec<u64>>> = None;
+static mut OWNERSHIP: Option<HashMap<Owner, Vec<Ownership>>> = None;
 
 #[init]
 fn init() {
@@ -35,17 +48,27 @@ fn init() {
 }
 
 #[update]
-fn mint_nft(owner: Owner, nft_id: u64, usage_date: u64) -> Result<(), String> {
+fn init_mannual() {
     unsafe {
-        let nfts = NFTS.as_mut().unwrap();
+        NFTS = Some(HashMap::new());
+        OWNERSHIP = Some(HashMap::new());
+        NFTS_TEMPLATES = Some(get_template_nfts_helper().clone());  
+    }
+}
+
+#[update]
+fn mint_nft(owner: Owner, nft_id: String, minted_at: u128) -> Result<(), String> {
+    unsafe {
+        let nfts = NFTS_TEMPLATES.as_mut().unwrap();
         let ownership = OWNERSHIP.as_mut().unwrap();
 
-        if let Some(nft) = nfts.get(&nft_id) {
+        if let Some(_nft) = nfts.iter().find(|n| n.id == nft_id) {
             let user_nfts = ownership.entry(owner.clone()).or_insert(vec![]);
-            if user_nfts.contains(&nft_id) {
-                return Err("User already owns this NFT".to_string());
-            }
-            user_nfts.push(nft_id);
+            user_nfts.push(Ownership {
+                nft_id,
+                minted_at,
+                used_at: None,
+            });
             Ok(())
         } else {
             Err("NFT not found".to_string())
@@ -53,28 +76,62 @@ fn mint_nft(owner: Owner, nft_id: u64, usage_date: u64) -> Result<(), String> {
     }
 }
 
-#[query]
-fn get_user_nfts(owner: Owner) -> Vec<NFT> {
+
+#[update]
+fn use_nft(current_owner: Owner, used_at: u128, nft_id: String) -> Result<(), String> {
     unsafe {
-        let ownership = OWNERSHIP.as_ref().unwrap();
-        let nfts = NFTS.as_ref().unwrap();
-        ownership.get(&owner).map_or(vec![], |ids| {
-            ids.iter().filter_map(|id| nfts.get(id)).cloned().collect()
-        })
+        let ownership_map = OWNERSHIP.as_mut().ok_or("Ownership map is uninitialized")?;
+
+        if let Some(nft_list) = ownership_map.get_mut(&current_owner) {
+            if let Some(nft) = nft_list.iter_mut().find(|n| n.nft_id == nft_id && n.used_at.is_none()) {
+                nft.used_at = Some(used_at);
+                Ok(())
+            } else {
+                Err("NFT not found or already used".to_string())
+            }
+        } else {
+            Err("User not found".to_string())
+        }
     }
 }
 
-#[update]
-fn redeem_nft(owner: Owner, nft_id: u64) -> Result<(), String> {
+#[query]
+fn get_all_ownerships() -> Vec<Ownership> {
     unsafe {
-        let ownership = OWNERSHIP.as_mut().unwrap();
-        if let Some(user_nfts) = ownership.get_mut(&owner) {
-            if let Some(pos) = user_nfts.iter().position(|&id| id == nft_id) {
-                user_nfts.remove(pos);
-                return Ok(())
+        OWNERSHIP
+            .as_ref()
+            .map(|map| map.values().flat_map(|v| v.clone()).collect())
+            .unwrap_or_default()
+    }
+}
+
+#[query]
+fn get_user_nfts(owner: Owner) -> Vec<OwnedNft> {
+    unsafe {
+        let ownership_map = OWNERSHIP.as_ref();
+        let nft_templates = NFTS_TEMPLATES.as_ref();
+
+        match (ownership_map, nft_templates) {
+            (Some(ownerships), Some(templates)) => {
+                ownerships
+                    .get(&owner)
+                    .map(|owned| {
+                        owned.iter()
+                            .filter_map(|o| {
+                                templates.iter()
+                                    .find(|nft| nft.id == o.nft_id)
+                                    .cloned()
+                                    .map(|nft| OwnedNft {
+                                        nft,
+                                        ownership: o.clone(),
+                                    })
+                            })
+                            .collect()
+                    })
+                    .unwrap_or_default()
             }
+            _ => vec![],
         }
-        Err("NFT not owned by user".to_string())
     }
 }
 
@@ -92,28 +149,6 @@ fn add_nft_template(new_template: NFT) -> Result<(), String> {
         }
     }
 }
-
-// #[update]
-// fn set_usage_date(owner: Owner, nft_id: u64, usage_date: u64) -> Result<(), String> {
-//     unsafe {
-//         let ownership = OWNERSHIP.as_mut().unwrap();
-//         let nfts = NFTS.as_mut().unwrap();
-        
-//         if let Some(user_nfts) = ownership.get(&owner) {
-//             if user_nfts.contains(&nft_id) {
-//                 if let Some(nft) = nfts.get_mut(&nft_id) {
-//                     if nft.usage_date.is_none() {
-//                         nft.usage_date = Some(usage_date);
-//                         return Ok(());
-//                     } else {
-//                         return Err("Usage date is already set".to_string());
-//                     }
-//                 }
-//             }
-//         }
-//         Err("NFT not owned by user".to_string())
-//     }
-// }
 
 #[query]
 fn get_template_nfts() -> Vec<NFT> {

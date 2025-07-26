@@ -19,12 +19,13 @@ import {
 import { ApplicationRoutes } from '../../utils/constants';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor as createDip20Actor, canisterId as dip20CanisterId } from 'declarations/dip20';
+import { createActor as createNftActor, canisterId as nftCanisterId } from 'declarations/nft';
 import {
   createActor as createStorageActor,
   canisterId as storageCanisterId,
 } from 'declarations/storage';
 import { useSiws } from 'ic-siws-js/react';
-import Chart from 'react-apexcharts';
+// import Chart from 'react-apexcharts';
 import toastNotifications from '../../utils/toastNotifications.utils';
 import WheelComponent from '../../components/WheelComponent';
 
@@ -92,11 +93,16 @@ const ProfilePage = () => {
   const [dailyTokens, setDailyTokens] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [principal, setPrincipal] = useState();
+  const [ownershipRecords, setOwnershipRecords] = useState([]);
+  const [usersNfts, setUsersNfts] = useState([]);
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return '';
+  const formatDate = dateString => {
+    if (!dateString) return 'No expiration';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+      + ' '
+      + date.toLocaleTimeString('en-GB');
   };
 
   // Mock eco quiz questions
@@ -292,15 +298,22 @@ const ProfilePage = () => {
       const identity = authClient.getIdentity();
       const dip20Actor = createDip20Actor(dip20CanisterId, {
         agentOptions: {
-          identity: solanaIdentity || identity,
+          identity:  identity,
         },
       });
 
       const storageActor = createStorageActor(storageCanisterId, {
         agentOptions: {
-          identity: solanaIdentity || identity,
+          identity:  identity,
         },
       });
+
+      const nftActor = createNftActor(nftCanisterId, {
+        agentOptions: {
+          identity:  identity,
+        },
+      });
+
 
       const balance = await dip20Actor.balance_of(identity.getPrincipal().toString());
       setPorBalance(Number(balance));
@@ -308,7 +321,14 @@ const ProfilePage = () => {
       const usersRecycleRecords = await storageActor.get_recycle_data(
         identity.getPrincipal().toString(),
       );
+      const ownerships = await nftActor.get_all_ownerships();
+      console.log(await nftActor.get_template_nfts())
+      const userNfts = (await nftActor.get_template_nfts()).filter(nft => nft.owner === identity.getPrincipal().toString());
+      
+      setUsersNfts(userNfts)
+      setOwnershipRecords(ownerships)
       setRecycleRecords(usersRecycleRecords);
+      setPrincipal(identity)
     } catch (err) {
       console.log(err);
     }
@@ -343,7 +363,7 @@ const ProfilePage = () => {
                       @
                       {solanaIdentity
                         ? solanaIdentity.getPrincipal().toString()
-                        : principal.getPrincipal().toString()}
+                        : principal?.getPrincipal().toString()}
                     </h1>
                   </div>
                   <div className='flex gap-2 mt-4 md:mt-0'>
@@ -523,22 +543,75 @@ const ProfilePage = () => {
                     )}
 
                     {activeTab === 'nfts' && (
-                      <div className='text-center py-12'>
-                        <ShoppingBag className='h-12 w-12 text-gray-300 mx-auto mb-4' />
-                        <h3 className='text-lg font-medium text-gray-700 mb-2'>
-                          View Your NFT Collection
-                        </h3>
-                        <p className='text-gray-500 max-w-md mx-auto mb-6'>
-                          Check out all the NFTs you've earned through recycling and manage your
-                          rewards.
-                        </p>
-                        <Link
-                          to={ApplicationRoutes.MyNFTsPage}
-                          className='inline-flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700'
-                        >
-                          Go to My NFTs
-                          <ChevronRight className='h-4 w-4' />
-                        </Link>
+                      <div className='text-center py-3'>
+                        <div className='text-2xl text-green-700 font-bold mb-2'>NFTs</div>
+                        <div className="relative overflow-x-auto mb-10">
+                            <table className="w-full text-sm text-left rtl:text-right text-green-500">
+                                <thead className="text-xs text-green-700 uppercase bg-green-50 ">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">
+                                            ID
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Name
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Description
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  {usersNfts.map(nft => (
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {nft.id}
+                                        </th>
+                                        <td className="px-6 py-4">
+                                            {nft.title}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {nft.description}
+                                        </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div className='text-2xl text-green-700 font-bold mb-2'>Ownership records</div>
+                        <div className="relative overflow-x-auto">
+                            <table className="w-full text-sm text-left rtl:text-right text-green-500">
+                                <thead className="text-xs text-green-700 uppercase bg-green-50 ">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">
+                                            NFT id
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Minted at
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Used at
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  {ownershipRecords.map(ownership => (
+                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {ownership.nft_id}
+                                        </th>
+                                        <td className="px-6 py-4">
+                                            {formatDate(new Date(Number(ownership.minted_at)))}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {!ownership.used_at.length ? 'Not used' : formatDate(new Date(Number(ownership.used_at[0])))}
+                                        </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                            </table>
+                        </div>
                       </div>
                     )}
 
@@ -553,13 +626,13 @@ const ProfilePage = () => {
                             Recycling Activity (Last 7 Days)
                           </h3>
                           <div className='h-64 w-full'>
-                            <Chart
+                            {/* <Chart
                               options={chartOptions}
                               series={chartSeries}
                               type='bar'
                               height='100%'
                               width='100%'
-                            />
+                            /> */}
                           </div>
                         </div>
 
