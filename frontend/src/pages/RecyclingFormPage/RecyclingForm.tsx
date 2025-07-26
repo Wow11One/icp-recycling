@@ -6,7 +6,7 @@ import {
   canisterId as storageCanisterId,
   createActor as createStorageActor,
 } from 'declarations/storage';
-import { canisterId as dip20CanisterId, createActor as createDip20Actor } from 'declarations/dip20';
+import { canisterId as dip20CanisterId, createActor as createDip20Actor } from 'declarations/icrc2';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { AuthClient } from '@dfinity/auth-client';
 import imageCompression from 'browser-image-compression';

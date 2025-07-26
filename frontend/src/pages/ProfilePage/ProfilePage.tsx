@@ -18,13 +18,12 @@ import {
 } from 'lucide-react';
 import { ApplicationRoutes } from '../../utils/constants';
 import { AuthClient } from '@dfinity/auth-client';
-import { createActor as createDip20Actor, canisterId as dip20CanisterId } from 'declarations/dip20';
+import { createActor as createDip20Actor, canisterId as icrc2CanisterId } from 'declarations/icrc2';
 import { createActor as createNftActor, canisterId as nftCanisterId } from 'declarations/nft';
 import {
   createActor as createStorageActor,
   canisterId as storageCanisterId,
 } from 'declarations/storage';
-import { useSiws } from 'ic-siws-js/react';
 import Chart from 'react-apexcharts';
 import toastNotifications from '../../utils/toastNotifications.utils';
 import WheelComponent from '../../components/WheelComponent';
@@ -82,7 +81,6 @@ const RecyclingActivityGraph = () => {
 };
 
 const ProfilePage = () => {
-  const { identity: solanaIdentity } = useSiws();
   const [activeTab, setActiveTab] = useState('activity');
   const [porBalance, setPorBalance] = useState(0);
   const [recycleRecords, setRecycleRecords] = useState([]);
@@ -105,7 +103,6 @@ const ProfilePage = () => {
       + date.toLocaleTimeString('en-GB');
   };
 
-  // Mock eco quiz questions
   const ecoQuizQuestions = [
     {
       question: 'Which of these items cannot be recycled?',
@@ -131,7 +128,6 @@ const ProfilePage = () => {
     setDailyTokens(tokens);
   };
 
-  // Handle quiz answer
   const handleQuizAnswer = (answer: string) => {
     const newAnswers = [...quizAnswers];
     newAnswers[currentQuestion] = answer;
@@ -140,7 +136,6 @@ const ProfilePage = () => {
     if (currentQuestion < ecoQuizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Calculate correct answers
       const correctCount = newAnswers.filter(
         (answer, index) => answer === ecoQuizQuestions[index].correctAnswer,
       ).length;
@@ -149,7 +144,6 @@ const ProfilePage = () => {
     }
   };
 
-  // Reset quiz state
   const resetQuiz = () => {
     setCurrentQuestion(0);
     setQuizAnswers([]);
@@ -296,7 +290,7 @@ const ProfilePage = () => {
     try {
       const authClient = await AuthClient.create();
       const identity = authClient.getIdentity();
-      const dip20Actor = createDip20Actor(dip20CanisterId, {
+      const dip20Actor = createDip20Actor(icrc2CanisterId, {
         agentOptions: {
           identity:  identity,
         },
@@ -328,7 +322,8 @@ const ProfilePage = () => {
       setUsersNfts(userNfts)
       setOwnershipRecords(ownerships)
       setRecycleRecords(usersRecycleRecords);
-      setPrincipal(identity)
+      setPrincipal(identity);
+      (identity.getPrincipal().toString());
     } catch (err) {
       console.log(err);
     }
@@ -360,10 +355,7 @@ const ProfilePage = () => {
                   </div>
                   <div className='flex-1'>
                     <h1 className='text-lg pt-12 font-bold text-green-800'>
-                      @
-                      {solanaIdentity
-                        ? solanaIdentity.getPrincipal().toString()
-                        : principal?.getPrincipal().toString()}
+                      @{principal?.getPrincipal().toString()}
                     </h1>
                   </div>
                   <div className='flex gap-2 mt-4 md:mt-0'>

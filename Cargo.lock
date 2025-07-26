@@ -186,19 +186,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dip20"
-version = "0.1.0"
-dependencies = [
- "candid",
- "ic-cdk",
- "ic-cdk-macros 0.13.3",
- "ic-cdk-timers",
- "ic-stable-structures",
- "icrc-ledger-types",
- "serde",
-]
-
-[[package]]
 name = "either"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -419,6 +406,19 @@ dependencies = [
  "sha2",
  "strum",
  "time",
+]
+
+[[package]]
+name = "icrc2"
+version = "0.1.0"
+dependencies = [
+ "candid",
+ "ic-cdk",
+ "ic-cdk-macros 0.13.3",
+ "ic-cdk-timers",
+ "ic-stable-structures",
+ "icrc-ledger-types",
+ "serde",
 ]
 
 [[package]]

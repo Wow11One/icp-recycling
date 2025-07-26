@@ -24,15 +24,15 @@
         }
       ]
     },
-    "dip20": {
-      "candid": "dip20/dip20.did",
+    "icrc2": {
+      "candid": "icrc2/icrc2.did",
       "type": "custom",
       "shrink": true,
       "gzip": true,
-      "wasm": "target/wasm32-unknown-unknown/release/dip20.wasm",
+      "wasm": "target/wasm32-unknown-unknown/release/icrc2.wasm",
       "build": [
-        "cargo build --target wasm32-unknown-unknown --release -p dip20",
-        "candid-extractor target/wasm32-unknown-unknown/release/dip20.wasm > dip20/dip20.did"
+        "cargo build --target wasm32-unknown-unknown --release -p icrc2",
+        "candid-extractor target/wasm32-unknown-unknown/release/icrc2.wasm > icrc2/icrc2.did"
       ],
       "metadata": [
         {

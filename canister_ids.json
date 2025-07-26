@@ -1,20 +1,17 @@
 {
   "backend": {
-    "ic": "2nulh-wqaaa-aaaan-qzymq-cai"
-  },
-  "dip20": {
-    "ic": "2exa3-ayaaa-aaaan-qzyna-cai"
+    "ic": "j4jmf-lqaaa-aaaak-qukuq-cai"
   },
   "frontend": {
-    "ic": "2dwgp-naaaa-aaaan-qzynq-cai"
+    "ic": "janwu-4qaaa-aaaak-qukwq-cai"
   },
-  "ic_siws_provider": {
-    "ic": "ebufv-eqaaa-aaaan-qz2aq-cai"
+  "icrc2": {
+    "ic": "jvkhz-5yaaa-aaaak-qukva-cai"
   },
   "nft": {
-    "ic": "2wrxc-miaaa-aaaan-qzyoa-cai"
+    "ic": "jslbn-qaaaa-aaaak-qukvq-cai"
   },
   "storage": {
-    "ic": "2rqrw-bqaaa-aaaan-qzyoq-cai"
+    "ic": "jhmqa-riaaa-aaaak-qukwa-cai"
   }
 }

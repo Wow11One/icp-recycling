@@ -92,7 +92,7 @@ function MyNftsPage() {
     console.log('currentNft', currentNft)
     setSelectedNft((prev) => ({
       ...currentNft
-    }));
+    } as any));
   };
 
   const initData = async () => {
@@ -127,7 +127,8 @@ function MyNftsPage() {
       console.log('msgg', msg)
       //setMessages((prev) => [...prev, msg.data]);
       toastNotifications.success(`Your NFT was successfully scanned!`);
-      handleUseNft(msg.data.nftIdParam, msg.data.usageTime)
+      window.location.reload();
+      //handleUseNft(msg.data.nftIdParam, msg.data.usageTime)
     });
 
     return () => {
