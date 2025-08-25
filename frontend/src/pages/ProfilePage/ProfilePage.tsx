@@ -472,6 +472,16 @@ const ProfilePage = () => {
                       >
                         Recycling Stats
                       </button>
+                      <button
+                        onClick={() => setActiveTab('bonuses')}
+                        className={`px-4 py-3 text-sm font-medium ${
+                          activeTab === 'stats'
+                            ? 'text-green-600 border-b-2 border-green-600'
+                            : 'text-gray-600 hover:text-green-600'
+                        }`}
+                      >
+                        Bonuses
+                      </button>
                     </div>
                   </div>
 
@@ -708,6 +718,108 @@ const ProfilePage = () => {
                               <span className='flex-1 font-medium text-gray-800'>You</span>
                               <span className='font-medium text-green-600'>450 POR</span>
                             </div> */}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeTab === "bonuses" && (
+                      <div className="space-y-6">
+                        <h2 className="text-lg font-medium text-green-800 mb-4">Available Bonuses</h2>
+                        <p className="text-sm text-gray-600 mb-6">
+                          Purchase bonuses to enhance your recycling experience and earn more rewards!
+                        </p>
+
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                          {/* Token Multiplier Bonus */}
+                          <div className="bg-white p-6 rounded-lg border border-green-200 hover:border-green-300 transition-colors">
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                                <span className="text-2xl">⚡</span>
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-800">Token Multiplier</h3>
+                                <p className="text-sm text-gray-600">1.5x Reward Boost</p>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-4">
+                              Multiply your recycling token rewards by 1.5x for all activities. Perfect for maximizing your earnings!
+                            </p>
+                            <div className="flex items-center justify-between mb-4">
+                              <span className="text-lg font-bold text-green-600">0.05 ETH</span>
+                              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Most Popular</span>
+                            </div>
+                            <button className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium">
+                              Purchase Bonus
+                            </button>
+                          </div>
+
+                          {/* Daily Limit Bypass */}
+                          <div className="bg-white p-6 rounded-lg border border-green-200 hover:border-green-300 transition-colors">
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className="text-2xl">🚀</span>
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-800">Limit Bypass</h3>
+                                <p className="text-sm text-gray-600">Unlimited Recycling</p>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-4">
+                              Remove the 5 recyclings per day limit and recycle as much as you want. Great for active recyclers!
+                            </p>
+                            <div className="flex items-center justify-between mb-4">
+                              <span className="text-lg font-bold text-green-600">0.03 ETH</span>
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">24h Duration</span>
+                            </div>
+                            <button className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium">
+                              Purchase Bonus
+                            </button>
+                          </div>
+
+                          {/* Discount Shop Access */}
+                          <div className="bg-white p-6 rounded-lg border border-green-200 hover:border-green-300 transition-colors">
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                <span className="text-2xl">🎁</span>
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-800">VIP Discount</h3>
+                                <p className="text-sm text-gray-600">NFT Shop Access</p>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-4">
+                              Get exclusive access to discounted NFTs in our eco-friendly marketplace. Unlock rare collectibles!
+                            </p>
+                            <div className="flex items-center justify-between mb-4">
+                              <span className="text-lg font-bold text-green-600">0.02 ETH</span>
+                              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">Premium</span>
+                            </div>
+                            <button className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium">
+                              Purchase Bonus
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Active Bonuses Section */}
+                        <div className="bg-white p-6 rounded-lg border border-green-200">
+                          <h3 className="text-lg font-medium text-green-800 mb-4">Active Bonuses</h3>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">⚡</span>
+                                <div>
+                                  <p className="font-medium text-gray-800">Token Multiplier (1.5x)</p>
+                                  <p className="text-sm text-gray-600">Expires in 2 days, 14 hours</p>
+                                </div>
+                              </div>
+                              <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">Active</span>
+                            </div>
+
+                            <div className="text-center py-8 text-gray-500">
+                              <p className="text-sm">No other active bonuses</p>
+                              <p className="text-xs mt-1">Purchase bonuses above to enhance your recycling experience</p>
+                            </div>
                           </div>
                         </div>
                       </div>
